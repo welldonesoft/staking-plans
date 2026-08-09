@@ -1,0 +1,5291 @@
+---
+id: 1-point-back
+name: 1 Point Back
+category: back
+type: flat
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - One Point Back
+---
+
+# 1 Point Back Staking Plan
+
+## Overview
+
+A minimalist staking plan using a single unit (1 point) for every back bet. The simplest possible approach — identical to level stakes with a unit of 1.
+
+## How It Works
+
+Bet exactly 1 point on every selection. Track profit/loss in points rather than currency. The absolute simplest staking plan possible.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `point_value` | number | 1 | The monetary value of 1 point (for currency conversion) |
+
+## Risk Assessment
+
+- **Risk Level:** Low
+- **Max Drawdown:** 1 point × consecutive losses
+- **Recommended Bankroll:** 20–50 points
+- **Ruin Risk:** Very low
+
+## When to Use
+
+- Absolute beginners
+- Testing a new selection system
+- You want to track in points, not currency
+
+## When to Avoid
+
+- You want any kind of compounding or progression
+- Your bankroll is very small relative to point value
+
+## Betfair Exchange Notes
+
+- Works identically for back and lay (1 point lay means 1 point stake, liability varies)
+- Ideal for testing systems on exchange before committing real money
+
+## Related Plans
+
+- [Level Stakes](./level-stakes.md) — Same concept, explicit currency amount
+- [Lay 1 Point](./lay-1-point.md) — Lay equivalent
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: 1326
+name: 1-3-2-6 System
+category: back
+type: positive-progression
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - 1-3-2-6 Staking
+  - 1326 System
+---
+
+# 1-3-2-6 Staking System
+
+## Overview
+
+A positive progression system where stakes follow the sequence 1, 3, 2, 6 units. Reset to 1 unit after any loss or completing the sequence. The idea is to capitalize on winning streaks while risking only your initial unit.
+
+## How It Works
+
+The sequence represents multiples of your base unit:
+
+| Step | Stake (units) | If Win | If Lose |
+|------|---------------|--------|---------|
+| 1 | 1 | Profit: +1 unit → next step | Loss: −1 unit → reset |
+| 2 | 3 | Profit: +3 → total +4 → next step | Loss: −3 → net −2 → reset |
+| 3 | 2 | Profit: +2 → total +6 → next step | Loss: −2 → net +2 → reset |
+| 4 | 6 | Profit: +6 → total +12 → reset | Loss: −6 → net 0 → reset |
+
+**Key insight:** You only risk your initial 1 unit. After step 1 wins, the system's profits fund the remaining stakes. Maximum downside is 2 units (lose at step 2). Maximum upside is 12 units (complete the full sequence).
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `unit` | number | 1 | Base unit size |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** 2 units per cycle (lose at step 2 after winning step 1)
+- **Recommended Bankroll:** 20+ units
+- **Ruin Risk:** Low — stakes are capped at 6 units and only escalate after wins
+
+## When to Use
+
+- You want to ride winning streaks without chasing losses
+- Your selections occasionally hit 2–4 consecutive wins
+- You prefer a disciplined, mechanical approach
+
+## When to Avoid
+
+- Very low strike-rate systems — you'll rarely progress past step 1–2
+- You want to maximize every winning bet (you sometimes "give back" profits, e.g., step 4 loss = net zero)
+
+## Similar Systems
+
+| System | Sequence | Max Risk |
+|--------|----------|----------|
+| 1-3-2-6 | 1, 3, 2, 6 | 2 units |
+| 1-3-2-4 | 1, 3, 2, 4 | 2 units |
+| Paroli | Double after each win (3 steps) | 1 unit |
+
+## Betfair Exchange Notes
+
+- Works for both back and lay betting
+- For lay betting, define "unit" as your target profit (not liability), so the sequence controls how much you aim to win per bet
+- Commission reduces net profit from the 12-unit max — at 5% commission, max net ≈ 11.4 units
+
+## Related Plans
+
+- [Parlay](./parlay.md) — Let-it-ride positive progression
+- [Paroli](./parlay.md) — Double after wins (3-step reverse Martingale)
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: 2-6-staking
+name: 2-6 Staking Plan
+category: back
+type: progression
+risk: medium
+betfair_compatible: true
+aliases:
+  - 2-6 System
+  - Two from Six
+  - Logic System variant
+source: marketfeeder
+---
+
+# 2-6 Staking Plan
+
+## Overview
+
+A variation of the Logic System: aim to win 2 bets out of a sequence of 6 before restarting. Each bet in the sequence uses a predefined multiplier. Losses are carried forward into subsequent bets. Designed for backing favourites with reasonable strike rates.
+
+## How It Works
+
+The sequence uses fixed multipliers: **1, 2, 4, 6, 8, 12**
+
+1. Start with a target profit (e.g., 1% of bank = £10)
+2. Bet 1: stake to win 1× target. If it wins, you have 1 win towards the goal of 2.
+3. Bet 2: stake to win 2× target (plus any carried loss). Continue.
+4. **Win 2 bets** → restart the cycle with recalculated target based on new bank.
+5. **Reach bet 6 without 2 wins** → restart anyway (accept the loss).
+
+## Formula
+
+$$S_n = \frac{M_n \times T + \sum L}{o_n - 1}$$
+
+Where:
+- $S_n$ = stake for bet $n$ in the sequence
+- $M_n$ = multiplier for position $n$ (1, 2, 4, 6, 8, 12)
+- $T$ = target profit per bet
+- $\sum L$ = cumulative losses so far in the cycle
+- $o_n$ = decimal odds for bet $n$
+
+## Multiplier Sequence
+
+| Position | Multiplier | Target (T=£10) |
+|----------|-----------|-----------------|
+| 1 | 1× | £10 |
+| 2 | 2× | £20 |
+| 3 | 4× | £40 |
+| 4 | 6× | £60 |
+| 5 | 8× | £80 |
+| 6 | 12× | £120 |
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target_pct` | number | 1 | Target profit as % of bank |
+| `cycle_length` | number | 6 | Number of bets in sequence |
+| `win_target` | number | 2 | Wins needed to restart |
+| `multipliers` | number[] | [1,2,4,6,8,12] | Multiplier at each position |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Escalates with losses — multipliers grow, and losses are carried forward
+- **Recommended Bankroll:** 200+ units
+- **Ruin Risk:** Medium — 6-bet cap limits damage, but losses accumulate within cycles
+
+## When to Use
+
+- Backing favourites with decent strike rates (>33%)
+- You want a structured, finite recovery cycle
+- You prefer mechanical rules with clear endpoints
+
+## When to Avoid
+
+- Low strike-rate systems (won't hit 2 wins in 6 often)
+- Lay betting (not designed for it)
+- Initial target above 3% of bank (can wipe out bank quickly)
+
+## Betfair Exchange Notes
+
+- Designed for back betting on favourites
+- Not suitable for lay betting
+- Commission reduces effective profit per winner — factor into target
+
+## Related Plans
+
+- [Pro](./pro.md) — More aggressive recovery with fixed target per market
+- [6 Point Divisor](./6-point-divisor.md) — Another finite-cycle target plan
+
+---
+
+## Sources
+
+- **Plan source:** [MarketFeeder — 2-6 Staking Plan](https://marketfeeder.co.uk/learn/triggers/staking-plan-2-6/)
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: 6-point-divisor
+name: 6 Point Divisor Plan
+category: back
+type: target-based
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Six Point Divisor
+  - 6 Point Plan
+---
+
+# 6 Point Divisor Staking Plan
+
+## Overview
+
+A target-based staking plan using a divisor that starts at 6. After each win, the divisor decreases. After consecutive losses, the divisor can increase to manage stake escalation. Balances recovery with bankroll protection.
+
+## How It Works
+
+1. Set a profit target. Divisor starts at 6.
+2. Stake = Target / Divisor
+3. **Win:** Target reduces by profit. Divisor reduces by 1 (minimum 2).
+4. **Loss (after 2+ consecutive losses):** Target increases by lost stake. Optionally increase divisor to 6 again to cap stake growth.
+
+## Formula
+
+$$S = \frac{T}{D}$$
+
+Where $D$ adjusts:
+- Start: $D = 6$
+- After win: $D = \max(D - 1, 2)$
+- After sustained losses: $D$ may reset to 6 (cap mechanism)
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target` | number | 60 | Profit target |
+| `divisor` | number | 6 | Starting divisor |
+| `min_divisor` | number | 2 | Minimum divisor |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Controlled — divisor reset caps stake escalation
+- **Recommended Bankroll:** 5–10× target
+- **Ruin Risk:** Medium-low — more controlled than Retirement plan
+
+## When to Use
+
+- You want target-based staking with built-in safety mechanisms
+- You prefer structured plans with clear rules
+- Your system has moderate strike rate and odds
+
+## When to Avoid
+
+- Very low strike rates — frequent divisor resets mean slow progress
+- You prefer simpler plans
+
+## Betfair Exchange Notes
+
+- Works for both back and lay
+- For lay betting, use liability as the basis for target and stake calculations
+
+## Related Plans
+
+- [Retirement](./retirement.md) — Similar divisor plan without the 6-point mechanism
+- [Bookies Bank](./bookies-bank.md) — Another divisor-based target plan
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: back-accumulator
+name: Back Accumulator Staking Plan
+category: back
+type: positive-progression
+risk: medium
+betfair_compatible: true
+aliases:
+  - Accumulator Staking (Back)
+  - Profit Accumulator
+source: marketfeeder
+---
+
+# Back Accumulator Staking Plan
+
+## Overview
+
+A positive progression plan for back betting: after each win, accumulate the stake by adding the base stake plus a percentage of the profit. Reset to base after a loss or after completing the cycle. The opposite of recovery staking — it compounds winnings, not losses.
+
+## How It Works
+
+1. Start with a base stake (e.g., £5)
+2. **Win:** Next stake = base stake × step number + % of previous profit
+3. **Loss:** Reset to base stake
+4. After N steps (e.g., 5), reset to base stake regardless
+
+**Example (5-step cycle, £5 base, 50% profit accumulation):**
+- Step 1: £5 (Win) → Step 2: £10 + 50% of £5 profit = £12.50
+- Step 2: £12.50 (Win) → Step 3: £15 + 50% of £12.50 profit = £21.25
+- Step 3: £21.25 (Loss) → Reset to £5
+
+## Formula
+
+$$S_n = B \times n + p \times P_{n-1}$$
+
+Where:
+- $S_n$ = stake at step $n$
+- $B$ = base stake
+- $n$ = step number in cycle (1, 2, 3...)
+- $p$ = profit accumulation percentage (e.g., 0.50)
+- $P_{n-1}$ = profit from the previous winning bet
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 5 | Starting stake |
+| `cycle_length` | number | 5 | Number of steps before forced reset |
+| `profit_pct` | number | 50 | % of profit to accumulate into next stake |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Base stake per losing bet (never chases losses)
+- **Recommended Bankroll:** 30× maximum cycle stake
+- **Ruin Risk:** Low — you only risk accumulated profits, never increase after losses
+
+## When to Use
+
+- Your selections cluster in winning streaks
+- You want to compound during hot runs
+- Risk-averse approach to progression (never chase losses)
+
+## When to Avoid
+
+- Isolated winners (rarely get to step 3+)
+- Low strike rates (mostly resetting to base)
+- You prefer flat staking for consistency
+
+## Betfair Exchange Notes
+
+- Commission reduces the effective profit for accumulation — use post-commission profit in the formula
+- Works well on exchange where you can adjust stakes fluidly
+
+## Related Plans
+
+- [Lay Accumulator](./lay-accumulator.md) — Lay equivalent (liability-based)
+- [Parlay](./parlay.md) — Simpler "let it ride" approach
+- [1-3-2-6](./1326.md) — Fixed-sequence positive progression
+
+---
+
+## Sources
+
+- **Plan source:** [MarketFeeder — Back Accumulator Staking](https://marketfeeder.co.uk/learn/triggers/back-accumulator-staking-plan/)
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: back-multi-link-doubles
+name: Back Multi-Link Doubles
+category: back
+type: cycle-based
+risk: medium
+betfair_compatible: true
+aliases:
+  - Multi-Link Doubles
+  - Cycle Doubles
+source: marketfeeder
+---
+
+# Back Multi-Link Doubles Plan
+
+## Overview
+
+A cycle-based staking plan where bets are placed in cycles of decreasing percentages of bank. Each winning bet's profit is partially redistributed ("linked") across remaining bets in the cycle, creating a compounding effect within each cycle.
+
+## How It Works
+
+1. A cycle has N bets (default 6)
+2. Bet 1: 5% of starting bank
+3. Bet 2: 4% of starting bank + fraction of Bet 1's winnings
+4. Bet 3: 3% of starting bank + fraction of cumulative winnings
+5. Continue down to Bet N: 1% + accumulated winnings
+6. Cycle ends → restart with new starting bank
+
+The "linking" means winning profits feed into remaining bets, accelerating growth within each cycle.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `starting_bank` | number | — | Bank at cycle start |
+| `cycle_length` | number | 6 | Number of bets per cycle |
+| `starting_pct` | number | 5 | First bet as % of starting bank |
+| `ending_pct` | number | 1 | Last bet as % of starting bank |
+
+## Percentages Per Step (6-bet cycle)
+
+| Step | Base % of Bank | + Accumulated Winnings |
+|------|---------------|----------------------|
+| 1 | 5% | — |
+| 2 | 4% | + fraction of Step 1 profit |
+| 3 | 3% | + fraction of cumulative profit |
+| 4 | 2% | + fraction of cumulative profit |
+| 5 | 1.5% | + fraction of cumulative profit |
+| 6 | 1% | + fraction of cumulative profit |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Decreasing stakes within cycle — later losses hurt less
+- **Recommended Bankroll:** 20× first bet size
+- **Ruin Risk:** Low-medium — no loss chasing
+
+## When to Use
+
+- Your selections have consistent moderate strike rates
+- You want structured cycle-based betting
+- You enjoy the mechanics of profit redistribution
+
+## When to Avoid
+
+- Very low strike rates (cycles rarely produce enough winners to link)
+- You prefer simple, non-cyclic plans
+
+## Betfair Exchange Notes
+
+- Commission (5%) must be factored into the profit redistribution calculations
+- The MarketFeeder implementation includes commission adjustment
+
+## Related Plans
+
+- [Rolling Doubles](./rolling-doubles.md) — Simpler doubles-based approach
+- [Parlay](./parlay.md) — Let-it-ride accumulation
+
+---
+
+## Sources
+
+- **Plan source:** [MarketFeeder — Back Multi-Link Doubles](https://marketfeeder.co.uk/learn/triggers/back-multi-link-doubles/)
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: bookies-bank-v2
+name: Bookies Bank V2
+category: back
+type: target-based
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Bookmaker's Bank V2
+---
+
+# Bookies Bank V2
+
+## Overview
+
+A modified version of the Bookies Bank staking plan with adjusted divisor rules. The divisor decreases differently after wins and has different reset conditions compared to V1.
+
+## How It Works
+
+Same core concept as Bookies Bank V1 (target-based with divisor) but:
+- Divisor reduces by the **odds value** (not by 1) after a win
+- Different reset/increment rules when a cycle completes
+- May use a dynamic divisor floor
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target` | number | 100 | Profit target |
+| `divisor` | number | 4 | Starting divisor |
+| `increment` | number | 10 | Target increase per completed cycle |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Slightly different profile from V1 due to divisor rules
+- **Recommended Bankroll:** 5× target
+
+## When to Use
+
+- You found V1's divisor rules too aggressive or too conservative
+- You want to experiment with divisor variants
+
+## Betfair Exchange Notes
+
+- Same exchange considerations as V1
+
+## Related Plans
+
+- [Bookies Bank](./bookies-bank.md) — Original (V1)
+- [Bookies Bank V3](./bookies-bank-v3.md) — Further variant
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: bookies-bank-v3
+name: Bookies Bank V3
+category: back
+type: target-based
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Bookmaker's Bank V3
+---
+
+# Bookies Bank V3
+
+## Overview
+
+A further variant of the Bookies Bank staking plan with different increment and reset mechanics. Designed for more aggressive compounding across cycles compared to V1 and V2.
+
+## How It Works
+
+Same core concept as Bookies Bank V1/V2 but:
+- Different target increment calculation after cycle completion
+- Modified reset conditions
+- May incorporate a "ratchet" mechanism where targets never decrease
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target` | number | 100 | Profit target |
+| `divisor` | number | 4 | Starting divisor |
+| `increment_type` | string | "compound" | How targets grow ("compound", "fixed", "percentage") |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Depends on configuration
+- **Recommended Bankroll:** 5× target
+
+## When to Use
+
+- More aggressive compounding goals
+- You've tested V1/V2 and want different mechanics
+
+## Betfair Exchange Notes
+
+- Same exchange considerations as V1
+
+## Related Plans
+
+- [Bookies Bank](./bookies-bank.md) — Original (V1)
+- [Bookies Bank V2](./bookies-bank-v2.md) — V2 variant
+- [Coup Master](./coup-master.md) — Similar compounding target approach
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: bookies-bank
+name: Bookies Bank
+category: back
+type: target-based
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Bookmaker's Bank
+---
+
+# Bookies Bank Staking Plan
+
+## Overview
+
+A target-based staking plan designed to capture the "bookmaker's margin" — aiming for steady, consistent profit. Uses a divisor system that resets after reaching the target, then starts a new cycle with an increased target.
+
+## How It Works
+
+1. Set a target and divisor. Stake = Target / Divisor.
+2. **Win:** Reduce target by profit. Reduce divisor by the odds of the winner (or 1).
+3. **Loss:** Add stake to target. Divisor unchanged.
+4. When target ≤ 0, the bank is "broken." Reset with new (potentially higher) target.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target` | number | 100 | Initial profit target |
+| `divisor` | number | 4 | Starting divisor |
+| `increment` | number | 10 | Amount to increase target after each completed cycle |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Moderate — target inflation after losses
+- **Recommended Bankroll:** 5× target
+- **Ruin Risk:** Medium
+
+## When to Use
+
+- You want methodical, structured profit accumulation
+- You're willing to follow a multi-cycle approach
+- Medium-term betting goals
+
+## When to Avoid
+
+- Quick profit expectations (cycles can be long with low strike rates)
+- Small bankrolls relative to target
+
+## Variants
+
+The Staking Machine includes three versions:
+- **Bookies Bank (V1)** — Standard divisor plan
+- **Bookies Bank V2** — Modified divisor adjustment rules
+- **Bookies Bank V3** — Different reset and increment mechanics
+
+## Betfair Exchange Notes
+
+- Commission delays reaching the target — factor into planning
+- Works for both back and lay
+
+## Related Plans
+
+- [Bookies Bank V2](./bookies-bank-v2.md) — Variant with modified rules
+- [Bookies Bank V3](./bookies-bank-v3.md) — Variant with different increment mechanics
+- [Retirement](./retirement.md) — Simpler divisor-based plan
+- [6 Point Divisor](./6-point-divisor.md) — Related divisor plan
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: certain-profit
+name: Certain Profit
+category: back
+type: target-based
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Guaranteed Profit Plan
+---
+
+# Certain Profit Staking Plan
+
+## Overview
+
+A target-based plan that calculates stakes to achieve a specific profit target while factoring in cumulative losses. After each loss, the target increases to include recovering previous losses, but the plan ensures any single winner at the right odds clears the entire target.
+
+## How It Works
+
+1. Set a profit target
+2. After each loss, add the lost stake to the target
+3. Calculate the next stake to achieve (original target + accumulated losses) given the odds
+4. A winner at sufficient odds clears all losses and achieves the target
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target` | number | 100 | Profit target |
+| `max_steps` | number | 10 | Maximum bets before forced reset |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Controlled by max_steps and odds
+- **Recommended Bankroll:** 10× target
+- **Ruin Risk:** Medium — max_steps provides a safety ceiling
+
+## When to Use
+
+- You want guaranteed profit per cycle (assuming a winner arrives within the step limit)
+- Controlled risk through step limits
+- Moderate strike rates
+
+## When to Avoid
+
+- Very low strike rate (winners arrive after max_steps expires)
+- High-odds selections (stakes to clear target become very small, prolonging cycles)
+
+## Betfair Exchange Notes
+
+- Commission effectively reduces the "certain" profit slightly
+- Works better for back betting than lay (predictable stake-to-return ratio)
+
+## Related Plans
+
+- [Retirement](./retirement.md) — Similar target approach with divisor
+- [Pro](./pro.md) — Aggressive recovery with profit target
+- [6 Point Divisor](./6-point-divisor.md) — Divisor-based target plan
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: contra-dalembert
+name: Contra D'Alembert
+category: back
+type: positive-progression
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - Reverse D'Alembert
+  - Anti-D'Alembert
+---
+
+# Contra D'Alembert
+
+## Overview
+
+The mirror image of the classic D'Alembert: increase stake by 1 unit after a **win**, decrease by 1 unit after a **loss**. A positive progression that compounds winnings and shrinks during losing runs. Much safer than standard D'Alembert.
+
+## How It Works
+
+1. Start with 1 unit
+2. **Win:** Increase stake by 1 unit
+3. **Loss:** Decrease stake by 1 unit (never below 1)
+4. No profit target per se — just ride the waves
+
+**Example:** 1 (Win) → 2 (Win) → 3 (Lose) → 2 (Win) → 3 (Lose) → 2 (Lose) → 1
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_unit` | number | 1 | Starting and minimum stake |
+| `increment` | number | 1 | Units to change per result |
+
+## Risk Assessment
+
+- **Risk Level:** Low
+- **Max Drawdown:** Limited — stakes decrease during losses
+- **Recommended Bankroll:** 30+ units
+
+## When to Use
+
+- Your winners cluster in streaks
+- You want the safety of decreasing stakes when cold
+- You prefer positive progression psychology
+
+## When to Avoid
+
+- Isolated winners (rarely build momentum)
+- You want a specific profit target mechanic
+
+## Contra vs Standard D'Alembert
+
+| | Standard | Contra |
+|---|---|---|
+| After win | Decrease | **Increase** |
+| After loss | Increase | **Decrease** |
+| Risk profile | Medium | Low |
+| Philosophy | Chase losses | Ride winners |
+
+## Betfair Exchange Notes
+
+- For lay Contra D'Alembert, decrease liability after losing lays, increase after winning lays
+
+## Related Plans
+
+- [D'Alembert](./dalembert.md) — Standard (negative progression) version
+- [Paroli](./paroli.md) — More aggressive positive progression (doubling)
+- [Oscar's Grind](./oscars-grind.md) — Another conservative positive progression
+
+---
+
+## Sources
+
+- **Plan mechanics:** Classic betting system (public domain)
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+---
+id: coup-master
+name: Coup Master
+category: back
+type: target-based
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Coup Plan
+---
+
+# Coup Master Staking Plan
+
+## Overview
+
+A target-based staking plan where each successful "coup" (completing a target cycle) leads to a new, larger target. Designed for structured, compounding bankroll growth through repeated target achievement.
+
+## How It Works
+
+1. Set an initial profit target
+2. Stake to achieve the target using a divisor or fixed calculation
+3. When target is reached (coup completed):
+   - Bankroll has grown
+   - Set a new, larger target based on the increased bankroll
+4. Repeat — each coup builds toward larger targets
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `initial_target` | number | 100 | Starting profit target |
+| `target_increase` | string | "percentage" | How targets increase ("percentage" or "fixed") |
+| `increase_amount` | number | 20 | Percentage or fixed amount increase per coup |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** During any single coup attempt — moderate
+- **Recommended Bankroll:** 5–10× initial target
+- **Ruin Risk:** Medium — each coup attempt is independent
+
+## When to Use
+
+- You want structured, compounding growth
+- You enjoy goal-oriented betting with clear milestones
+- Your bankroll can support escalating targets
+
+## When to Avoid
+
+- Inconsistent results (failed coups are discouraging)
+- You prefer simpler, non-target-based plans
+
+## Betfair Exchange Notes
+
+- After each successful coup, recalculate based on new bankroll accounting for commission
+- Works for both back and lay betting
+
+## Related Plans
+
+- [Bookies Bank](./bookies-bank.md) — Similar target-based compounding
+- [Retirement](./retirement.md) — Single-target cousin
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: dalembert
+name: D'Alembert
+category: back
+type: negative-progression
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - D'Alembert System
+  - Pyramid System
+---
+
+# D'Alembert Staking Plan
+
+## Overview
+
+A moderate negative progression system: increase stake by 1 unit after a loss, decrease by 1 unit after a win. Much less aggressive than Martingale or Fibonacci. Based on the (mathematically false) "law of equilibrium" — the belief that wins and losses eventually balance out.
+
+## How It Works
+
+- Start with a base stake (e.g., 1 unit)
+- **After a loss:** Increase next stake by 1 unit
+- **After a win:** Decrease next stake by 1 unit (never below base stake)
+- Theory: over time, wins and losses should roughly balance, and each win-lose pair produces +1 unit profit
+
+## Formula
+
+$$S_{i+1} = \begin{cases} S_i + 1 & \text{if bet } i \text{ lost} \\ \max(S_i - 1, 1) & \text{if bet } i \text{ won} \end{cases}$$
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_unit` | number | 1 | Starting and minimum stake |
+| `increment` | number | 1 | Amount to increase/decrease (default 1 unit) |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Linear growth — 10 consecutive losses = 55 units lost (1+2+3+...+10)
+- **Recommended Bankroll:** 100–200 units
+- **Ruin Risk:** Medium — slower stake growth than Fibonacci, but still vulnerable to long losing streaks
+
+## When to Use
+
+- You want a progression system but find Martingale/Fibonacci too aggressive
+- Your system has a roughly 50% strike rate
+- You have a moderate bankroll
+
+## When to Avoid
+
+- Low strike-rate systems — even linear growth becomes unsustainable over many losses
+- High-odds betting — wins are infrequent and the "1 unit per pair" profit logic breaks down
+- You're uncomfortable with any form of loss-chasing
+
+## Betfair Exchange Notes
+
+- For lay betting, be cautious: increasing stake after a loss means increasing liability. At odds of 5.0, each additional unit of stake = 4 additional units of liability.
+- Commission on wins reduces the net profit from win-lose pairs — the 1-unit-per-pair profit may become ~0.9 units after commission
+
+## Comparison
+
+| Plan | Stake After 5 Losses | Stake After 10 Losses | Recovery Style |
+|------|----------------------|------------------------|----------------|
+| D'Alembert | 6 units | 11 units | Linear |
+| Fibonacci | 8 units | 89 units | Exponential-ish |
+| Martingale | 32 units | 1,024 units | Doubling |
+
+## Related Plans
+
+- [Fibonacci](./fibonacci.md) — Faster negative progression
+- [Labouchere](./labouchere.md) — More aggressive sequence-based plan
+- [Contra D'Alembert](./parlay.md) — Reverse (increase after wins, decrease after losses)
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: diluted-loss-recovery
+name: Diluted Loss Recovery
+category: lay
+type: recovery
+risk: medium
+betfair_compatible: true
+aliases:
+  - Spread Loss Recovery
+  - Diluted Red Recovery
+source: community
+---
+
+# Diluted Loss Recovery
+
+## Overview
+
+A unique recovery approach: instead of chasing a loss in the very next bet (or next few bets), spread the loss evenly across **all remaining entries** in your betting list. Each remaining bet gets a small additional amount added to its stake, diluting the impact of any single loss across the entire session.
+
+## How It Works
+
+1. You have a list of selections to bet on (e.g., 30 greyhound races)
+2. Each selection starts with a base stake
+3. **When a loss occurs:** The lost amount is divided by the number of remaining entries
+4. Each remaining bet gets: base stake + (cumulative diluted loss / entries remaining)
+5. **When a win occurs:** The profit reduces the diluted loss pool
+6. Continue until the list is complete
+
+**Example:** Start with £10 base stake, 30 races in the list.
+- Race 3: Lose £30. 27 races remain. Add £30/27 = £1.11 to each remaining bet.
+- Race 10: Lose £40. 20 races remain. Total undiluted loss: ~£70. Add £70/20 = £3.50 each.
+- Race 15: Win £25. Undiluted loss drops to ~£45. 15 remain. Add £45/15 = £3.00 each.
+
+## Key Insight
+
+Unlike standard recovery where one loss can cascade into escalating stakes over the next few bets, **diluted recovery spreads the pain thinly**. A £100 loss over 50 remaining bets adds just £2 each — barely noticeable. This makes it far more psychologically manageable and bankroll-friendly than traditional recovery.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Base stake per selection |
+| `list_size` | number | 30 | Total entries in the list |
+| `max_dilution` | number | — | Optional cap on per-bet dilution amount |
+
+## Risk Assessment
+
+- **Risk Level:** Medium (much lower than standard recovery)
+- **Max Drawdown:** Spread across many bets — individual bet stakes grow slowly
+- **Recommended Bankroll:** 30× (base_stake + expected max dilution)
+- **Ruin Risk:** Low-medium — dilution prevents any single bet from ballooning
+
+## When to Use
+
+- You bet from a fixed list/roster of selections daily
+- You want loss recovery without the danger of escalating stakes
+- You prefer "slow and steady" recovery over aggressive loss-chasing
+
+## When to Avoid
+
+- Short lists (few entries = dilution is less effective — loss is spread over too few bets)
+- You don't use a predefined list of selections
+- Very low strike rates (losses accumulate faster than they can be diluted)
+
+## Betfair Exchange Notes
+
+- Originally proposed for lay betting with fixed liability
+- Works equally well for back betting
+- The concept of spreading liability across remaining entries is particularly valuable for lay betting where individual losses can be large
+
+## Related Plans
+
+- [Recovery](./recovery.md) — Traditional aggressive recovery (next bet recovers all)
+- [Incremental Loss Recovery](./incremental-loss-recovery.md) — Linear-add recovery (different philosophy)
+- [Stop at a Winner](./stop-at-a-winner.md) — Reset on any winner
+
+---
+
+## Sources
+
+- **Plan source:** [WellDone Community Forum — "new trigger"](https://community.welldonesoft.com/index.php?topic=17720.0) — user-contributed concept
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: divide-by-n-recovery
+name: Divide-by-N Recovery
+category: lay
+type: recovery
+risk: high
+betfair_compatible: true
+aliases:
+  - Split Recovery
+  - Win-N-in-a-Row Recovery
+source: community
+---
+
+# Divide-by-N Recovery
+
+## Overview
+
+A two-phase recovery plan: after accumulating losses, divide the total loss by N and then aim to win N consecutive bets at that calculated stake. If you lose during the N-win streak, recalculate and restart. Clever, but demands discipline and a reasonable strike rate.
+
+## How It Works
+
+**Phase 1 — Initial bet:** Bet at base stake. If it loses, attempt one recovery bet to recoup. If that also loses:
+
+**Phase 2 — Divide-and-conquer:**
+1. Calculate total loss from the failed recovery sequence
+2. Divide total loss by N (e.g., 4)
+3. The result is your new stake
+4. Place this stake on the next N bets — you need to win ALL N in a row
+5. **If you win N in a row:** Total loss is recovered → return to Phase 1
+6. **If you lose during the N-win streak:** Recalculate total loss (including the new losses), divide by N again, restart the N-win attempt
+
+**Example (N=4, £10 base):**
+- Bet 1: £10 lay. Lose (−£30). Bet 2: Recovery stake. Lose (−£60 more). Total = −£90.
+- Divide £90 by 4 = £22.50. Need 4 consecutive winning lays at £22.50 each.
+- Win, Win, Lose on 3rd. New total loss = £90 + £22.50 (loss on 3rd) = £112.50.
+- Divide £112.50 by 4 = £28.13. Need 4 consecutive wins at £28.13.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting stake |
+| `N` | number | 4 | Divisor and consecutive wins needed |
+| `max_stake` | number | — | Optional absolute stake cap |
+| `max_cycles` | number | — | Maximum divide-and-conquer attempts before giving up |
+
+## Risk Assessment
+
+- **Risk Level:** High
+- **Max Drawdown:** Can escalate if N is small (larger stake per bet) or if losing streaks persist during N-win attempts
+- **Recommended Bankroll:** 50× (expected max total loss / N)
+- **Ruin Risk:** High — the "N consecutive wins" requirement is steep
+
+## ⚠️ Critical Warning
+
+Winning N consecutive bets is **geometrically harder** than winning any single bet. At a 70% strike rate, the probability of 4 consecutive wins is 0.7⁴ = 24%. At 50%, it's just 6.25%. This plan can enter very long recovery cycles.
+
+## When to Use
+
+- Very high strike rate (>75%)
+- You have a large bankroll and steel nerves
+- You're willing to set a hard max_cycles and accept the loss if exceeded
+
+## When to Avoid
+
+- Strike rate below 65% (N=4) — you'll rarely complete a streak
+- Small bankrolls
+- You can't tolerate long losing/recovery sequences
+
+## Betfair Exchange Notes
+
+- Originally proposed for lay betting on greyhounds
+- For lay, the stake is the lay stake; liability = stake × (odds−1)
+- Consider using liability-based calculations instead of stake-based
+
+## Related Plans
+
+- [Recovery](./recovery.md) — Single-bet recovery (no divide-and-conquer)
+- [Stop at a Winner](./stop-at-a-winner.md) — Reset on any winner (only needs 1 win)
+- [Diluted Loss Recovery](./diluted-loss-recovery.md) — Spread loss across many bets (opposite philosophy)
+
+---
+
+## Sources
+
+- **Plan source:** [WellDone Community Forum — "Greyhound trigger"](https://community.welldonesoft.com/index.php?topic=15908.0) — user-contributed concept by Dace
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: due-column
+name: Due Column Staking Plan
+category: back
+type: target-based
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Due-Column System
+  - Two-Column Plan
+---
+
+# Due Column Staking Plan
+
+## Overview
+
+A target-based plan using two columns: a **profit column** and a **loss column**. The stake is the sum of entries in both columns divided by odds−1. After a win, cross off entries from both columns. After a loss, add to the loss column. The goal is to clear both columns.
+
+## How It Works
+
+1. Set up a **profit column** with your desired profit target split into numbers (e.g., 10-10-10 = £30 target)
+2. Set up an empty **loss column**
+3. Stake = (sum of profit column + sum of loss column) / (odds − 1)
+4. **Win:** Cross off the first entry from the profit column AND remove an equivalent amount from the loss column
+5. **Loss:** Add the lost stake to the loss column
+6. Target reached when the profit column is empty (loss column should also clear)
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `profit_targets` | number[] | [10,10,10] | Profit target broken into entries |
+| `max_loss_entries` | number | — | Maximum entries in loss column before giving up |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Loss column can grow during losing streaks, inflating stakes
+- **Recommended Bankroll:** 5× total profit target
+- **Ruin Risk:** Medium
+
+## When to Use
+
+- You want a structured, two-column approach to profit targeting
+- You prefer visual tracking of profit and loss separately
+
+## When to Avoid
+
+- Simple profit targets (use Retirement or 6 Point Divisor instead)
+- Low strike rates (loss column grows quickly)
+
+## Betfair Exchange Notes
+
+- Works for both back and lay
+- For lay, base columns on liability targets
+
+## Related Plans
+
+- [Labouchere](./labouchere.md) — Single-sequence approach (simpler)
+- [Retirement](./retirement.md) — Divisor-based targeting (simpler)
+
+---
+
+## Sources
+
+- **Plan mechanics:** Classic betting system (public domain)
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+---
+id: each-way-combined
+name: Each-Way Combined Staking
+category: each-way
+type: proportional
+risk: medium
+betfair_compatible: false
+aliases:
+source: tsm
+  - EW Combined
+---
+
+# Each-Way Combined Staking Plan
+
+## Overview
+
+A proportional staking plan for each-way betting where the stake adjusts based on bankroll and the relationship between win and place odds. The combined stake is calculated to optimize returns across both portions.
+
+## How It Works
+
+Rather than splitting the stake equally between win and place, the Combined plan adjusts the allocation based on:
+- Current bankroll
+- Win odds
+- Place terms and place odds
+- Relative value between win and place markets
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `total_stake_pct` | number | 5 | Total outlay as % of bankroll |
+| `win_weight` | number | 0.6 | Proportion of total stake on win portion |
+| `place_terms` | string | "1/4 1-2-3" | Place fraction and number of places |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Proportional to bankroll — self-adjusting
+- **Recommended Bankroll:** 20× total outlay
+
+## When to Use
+
+- You want to optimize each-way stake allocation
+- Your selections have different win/place profiles
+- You prefer proportional staking
+
+## When to Avoid
+
+- Simplicity is important (use Each-Way Level)
+- You're new to each-way betting
+
+## Each-Way Specific Notes
+
+- The win/place allocation ratio is the key parameter — it determines how much goes on each portion
+- At long odds, place returns become more important; at short odds, win returns dominate
+- Some configurations allocate more to place when place terms are generous
+
+## Betfair Exchange Notes
+
+- Each-way betting is primarily a bookmaker product
+- Simulating on exchange requires separate win and place market bets
+
+## Related Plans
+
+- [Each-Way Level](./each-way-level.md) — Simpler flat approach
+- [Percentage Staking](./percentage-staking.md) — Back-only proportional equivalent
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: each-way-level
+name: Each-Way Level Stakes
+category: each-way
+type: flat
+risk: low
+betfair_compatible: false
+aliases:
+source: tsm
+  - EW Level
+  - Each Way Flat Staking
+---
+
+# Each-Way Level Stakes
+
+## Overview
+
+Flat staking for each-way bets — the same fixed amount on both the win and place portions of every each-way bet. The simplest approach to each-way staking.
+
+## How It Works
+
+An each-way bet is two bets in one:
+1. **Win portion:** Stakes on the selection to win
+2. **Place portion:** Stakes on the selection to place (typically 1/4 or 1/5 odds for top 3–4)
+
+With each-way level staking, both portions use the same fixed stake.
+
+**Example:** £5 each-way = £5 on win + £5 on place = £10 total outlay. Both portions are fixed, every bet.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `ew_stake` | number | 5 | Stake for each portion (win AND place) |
+| `place_terms` | string | "1/4 1-2-3" | Place fraction and number of places |
+
+## Risk Assessment
+
+- **Risk Level:** Low
+- **Max Drawdown:** Total outlay × consecutive losses (each-way = 2× stake per bet)
+- **Recommended Bankroll:** 40× total outlay per bet
+- **Ruin Risk:** Low
+
+## When to Use
+
+- Beginner each-way betting
+- Consistent, predictable staking
+- Testing each-way selection systems
+
+## When to Avoid
+
+- You want to vary stake between win and place portions
+- You want compounding
+
+## Each-Way Specific Notes
+
+- Total outlay per bet = 2 × ew_stake (win + place)
+- Place returns depend on place terms (1/4 odds for top 3 is common in UK horse racing)
+- Both portions can win (selection wins), one can win (selection places), or both can lose
+
+## Betfair Exchange Notes
+
+- Each-way betting is primarily a bookmaker product, not natively available on Betfair Exchange
+- You can simulate each-way on exchange by placing separate back bets on win and place markets, but place markets have limited liquidity
+
+## Related Plans
+
+- [Each-Way Combined](./each-way-combined.md) — Proportional each-way approach
+- [Level Stakes](./level-stakes.md) — Back-only equivalent
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: fibonacci
+name: Fibonacci
+category: back
+type: negative-progression
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Fibonacci Sequence
+  - Fibonacci Staking
+---
+
+# Fibonacci Staking Plan
+
+## Overview
+
+A negative progression system using the Fibonacci sequence (1, 1, 2, 3, 5, 8, 13, 21...). After a loss, move one step forward in the sequence. After a win, move two steps back. The goal is to recover losses through progressively larger stakes.
+
+## How It Works
+
+- Start at the first number in the sequence (1 unit)
+- **After a loss:** Move forward one step in the sequence
+- **After a win:** Move back two steps
+- When you return to the start (or before), any winning sequence should produce a net profit
+
+## Formula
+
+The Fibonacci sequence:
+
+$$F_0 = 1, \quad F_1 = 1, \quad F_n = F_{n-1} + F_{n-2}$$
+
+Sequence: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144...
+
+**Stake:** $S = F_n \times \text{unit}$, where $n$ is your current position in the sequence.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `unit` | number | 1 | Base unit size for the sequence |
+
+## Risk Assessment
+
+- **Risk Level:** High
+- **Max Drawdown:** Potentially very large — 10 consecutive losses requires 89 units (sum of stakes = 231 units lost)
+- **Recommended Bankroll:** 500+ units
+- **Ruin Risk:** High — long losing streaks cause exponential stake growth (though slower than Martingale)
+
+## When to Use
+
+- You accept the risk of progressive staking
+- You have a very large bankroll relative to unit size
+- Your selections have a reasonable strike rate (avoid with very low win rates)
+
+## When to Avoid
+
+- Limited bankroll — long losing streaks will exhaust it
+- Low strike-rate systems — losses compound dangerously
+- You're uncomfortable with escalating stakes after losses
+- Exchange betting with high-odds selections (lay liability can become extreme)
+
+## Betfair Exchange Notes
+
+- For **lay betting** with Fibonacci, consider liability rather than stake — escalating lay stakes at high odds means exponentially growing liability
+- Commission on wins slightly reduces the recovery effect (you need slightly more than 2 steps back)
+
+## Comparison with Martingale
+
+| | Fibonacci | Martingale |
+|---|---|---|
+| Growth rate | Moderate | Exponential |
+| Recovery steps | 2 steps back per win | Reset to start per win |
+| 10-loss sequence stake | 89 units | 1,024 units |
+| Risk | High | Very High |
+
+## Related Plans
+
+- [D'Alembert](./dalembert.md) — Slower negative progression
+- [Labouchere](./labouchere.md) — Sequence-based but user-defined
+- [Recovery](./recovery.md) — More aggressive recovery approach
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: fixed-stake
+name: Fixed Stake
+category: back
+type: flat
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - Fixed Return
+  - Target Profit Staking
+---
+
+# Fixed Stake (Target Profit)
+
+## Overview
+
+Stake whatever amount is needed to achieve a fixed profit target, given the odds. Unlike level stakes (fixed outlay), this adjusts the stake based on odds so that every winning bet returns the same profit.
+
+## How It Works
+
+$$Stake = \frac{Target\ Profit}{Odds - 1}$$
+
+**Example:** Target profit = £10. At odds of 2.0, stake = £10 / 1 = £10. At odds of 5.0, stake = £10 / 4 = £2.50. Both winning bets return £10 profit.
+
+## Formula
+
+$$S = \frac{T}{o - 1}$$
+
+Where:
+- $S$ = stake
+- $T$ = target profit
+- $o$ = decimal odds
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target_profit` | number | 10 | Desired profit per winning bet |
+
+## Risk Assessment
+
+- **Risk Level:** Low (profit-side), Variable (stake-side)
+- **Max Drawdown:** Stake × losing streak length — higher at short odds
+- **Recommended Bankroll:** 50× target profit (covers high-stake short-odds bets)
+- **Ruin Risk:** Low with sensible targets
+
+## When to Use
+
+- You want consistent profit per winner regardless of odds
+- Your selections vary widely in odds but have similar confidence
+- Simpler than Kelly for odds-based stake adjustment
+
+## When to Avoid
+
+- Very short odds (near 1.01) — stake becomes extreme
+- Very long odds — stake becomes tiny, almost pointless
+- You don't care about consistent profit amounts
+
+## Betfair Exchange Notes
+
+- Adjust target profit downward by commission rate: effective target = target × (1 − commission)
+- For lay betting, the equivalent is **Fixed Liability** (risk the same liability regardless of odds) — see [Lay Liability](./lay-liability.md)
+
+## Related Plans
+
+- [Level Stakes](./level-stakes.md) — Fixed outlay, variable profit
+- [Lay Liability](./lay-liability.md) — Lay equivalent (fixed risk per bet)
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: hollandish
+name: Hollandish Staking Plan
+category: back
+type: negative-progression
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Dutch System
+  - Hollandish System
+---
+
+# Hollandish Staking Plan
+
+## Overview
+
+A structured negative progression system that operates in **blocks of 3 bets**. Within each block, the stake stays constant. If a block of 3 produces a net loss, double the stake for the next block. If a block produces a net profit, reset to base. Named after its supposed Dutch origins.
+
+## How It Works
+
+1. Divide bets into blocks of 3
+2. Within each block, use the same stake for all 3 bets
+3. **After 3 bets — if the block is net negative:** Double the stake for the next block of 3
+4. **After 3 bets — if the block is net positive (or break-even):** Reset to base stake
+5. A single winning block can recover losses from multiple losing blocks
+
+**Example:** £10 × 3, all lose (−£30). Next: £20 × 3, win 2, lose 1 (+£20 at evens − £20 = £0 break-even). Next: still £20. Next: £20 × 3, win all 3 (+£60). Net: −£30 + £0 + £60 = +£30. Reset.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting stake per bet |
+| `block_size` | number | 3 | Number of bets per block |
+| `multiplier` | number | 2 | Stake multiplier after a losing block |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Slower escalation than Martingale — doubling only after 3 bets, not after each loss
+- **Recommended Bankroll:** 100+ units (to survive 3–4 losing blocks)
+- **Ruin Risk:** Medium — slower than Martingale but still exponential over many losing blocks
+
+## When to Use
+
+- Your strike rate is consistent enough that most 3-bet blocks will be profitable
+- You want structured progression with built-in "pauses" between escalations
+- You prefer block-based thinking over individual bet chasing
+
+## When to Avoid
+
+- Very low strike rates (most blocks will lose, doubling compounds)
+- You want simple rules (block tracking adds complexity)
+
+## Betfair Exchange Notes
+
+- For lay betting, consider doubling liability rather than stake
+- Block-based approach works well for exchange — less frantic than bet-by-bet adjustments
+
+## Related Plans
+
+- [Martingale](./martingale.md) — Doubles after every loss (faster, more dangerous)
+- [Fibonacci](./fibonacci.md) — Moderate negative progression
+- [Stepped Time-Based](./stepped-time-staking.md) — Similar block-based thinking, different mechanics
+
+---
+
+## Sources
+
+- **Plan mechanics:** Classic betting system (public domain)
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+---
+id: i-tsm
+name: i-TSM
+category: back
+type: custom
+risk: variable
+betfair_compatible: true
+aliases:
+source: tsm
+  - Intelligent TSM
+---
+
+# i-TSM Staking Plan
+
+## Overview
+
+An intelligent, adaptive staking plan that adjusts stakes based on recent performance metrics. The "i" stands for intelligent — it dynamically modifies stake sizing based on strike rate, ROI, and other performance indicators.
+
+## How It Works
+
+1. Monitor recent betting performance (last N bets)
+2. Calculate performance metrics (strike rate, ROI, profit/loss)
+3. Adjust stake size based on metrics:
+   - **Good performance:** Gradually increase stakes
+   - **Poor performance:** Gradually decrease stakes
+4. The adjustment is continuous and data-driven
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting/reference stake |
+| `lookback` | number | 20 | Number of recent bets to analyze |
+| `sensitivity` | number | 0.5 | How aggressively to adjust stakes |
+
+## Risk Assessment
+
+- **Risk Level:** Variable (depends on sensitivity and lookback)
+- **Max Drawdown:** Self-correcting — reduces stakes during poor runs
+- **Recommended Bankroll:** 50× base stake
+- **Ruin Risk:** Low-medium — adaptive reduction provides protection
+
+## When to Use
+
+- You believe recent performance predicts near-future performance
+- You want a plan that "learns" from results
+- You're comfortable with data-driven approaches
+
+## When to Avoid
+
+- Your edge is consistent regardless of recent results (use fixed staking)
+- You want simple, predictable stake sizes
+- Short-term variance misleads the adaptive mechanism
+
+## Betfair Exchange Notes
+
+- The adaptive nature works well on exchange where you can adjust stakes fluidly
+- Ensure lookback period is long enough to distinguish signal from noise
+
+## Related Plans
+
+- [Percentage Staking](./percentage-staking.md) — Responds to bankroll, not performance
+- [Kelly Criterion](./kelly-criterion.md) — Responds to edge, not recent results
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: incremental-loss-recovery
+name: Incremental Loss Recovery
+category: lay
+type: recovery
+risk: medium
+betfair_compatible: true
+aliases:
+  - Incremental Recovery
+  - Step Recovery
+source: marketfeeder
+---
+
+# Incremental Loss Recovery Plan
+
+## Overview
+
+A milder alternative to Martingale-style recovery. After a loss, add the **starting bet amount** (not the full loss) to the next bet. After a win, reduce the bet by a percentage of the starting amount. Escalation is linear and controlled, not exponential.
+
+## How It Works
+
+1. Start with a fixed percentage of bank (unit size)
+2. **After a loss:** Next bet = previous bet + unit size
+3. **After a win:** Next bet = previous bet − (unit size × reduction %), but never below unit size
+
+**Example (unit = £10, reduction = 30%):**
+- £10 (Win) → £10
+- £10 (Loss) → £20
+- £20 (Win) → £14 (−30% of £10 = −£3 → wait, that's not right)
+
+Actually: reduction is 30% of the **starting bet** (£10), not the current bet. So £20 (Win) → £20 − £3 = £17 (but the description says £14... Let me re-read)
+
+The page says: "After each win, you decrease the next bet by a percentage of the starting bet, unless the bet is already equal to its initial size."
+
+Example: 10 (Win), 10 (Loss), 20 (Win), 14 (Win), 9.8 (Win)...
+
+So the reduction is from the **current bet**, not the starting bet. 20 − 30% = 14. Then 14 − 30% = 9.8. That matches.
+
+## Formula
+
+$$S_{i+1} = \begin{cases} S_i + U & \text{if loss} \\ \max(S_i \times (1 - r), U) & \text{if win} \end{cases}$$
+
+Where:
+- $S_i$ = current stake
+- $U$ = unit size (starting stake)
+- $r$ = reduction percentage after a win (e.g., 0.30)
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `unit_size_pct` | number | 1 | Unit size as % of bank |
+| `win_reduction` | number | 30 | % reduction after a win |
+| `min_odds` | number | 1.5 | Minimum lay odds |
+| `max_odds` | number | 10 | Maximum lay odds |
+
+## Risk Assessment
+
+- **Risk Level:** Medium (much lower than Martingale)
+- **Max Drawdown:** Linear growth at unit_size per loss — predictable
+- **Recommended Bankroll:** 100× unit size
+- **Ruin Risk:** Medium-low — linear escalation is manageable
+
+## Comparison: Martingale vs Incremental
+
+| | Martingale | Incremental |
+|---|---|---|
+| After a loss | Double the stake | Add unit size |
+| After 5 losses | 32× original | 6× original |
+| After 10 losses | 1,024× original | 11× original |
+| Risk | Very High | Medium |
+
+## When to Use
+
+- You want recovery mechanics but find Martingale too dangerous
+- Your lay system has moderate strike rates
+- You prefer predictable, linear stake growth
+
+## When to Avoid
+
+- Very long losing streaks (linear still adds up)
+- Very high lay odds (liability × linear growth can still be substantial)
+
+## Betfair Exchange Notes
+
+- Originally designed for lay betting but can be adapted for back
+- For lay, consider basing the unit on liability, not stake
+
+## Related Plans
+
+- [Recovery](./recovery.md) — More aggressive (full loss recovery)
+- [D'Alembert](./dalembert.md) — Similar linear progression, different rules
+- [Lay % Recovery](./lay-percentage-recovery.md) — Percentage-based lay recovery
+
+---
+
+## Sources
+
+- **Plan source:** [MarketFeeder — Incremental Loss Recovery](https://marketfeeder.co.uk/learn/triggers/incremental-loss-recovery/)
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: kelly-criterion
+name: Kelly Criterion
+category: back
+type: proportional
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Full Kelly
+  - Kelly Staking
+---
+
+# Kelly Criterion
+
+## Overview
+
+The mathematically optimal staking fraction for maximizing long-term bankroll growth, given a known edge. Developed by John L. Kelly Jr. at Bell Labs (1956). Full Kelly is aggressive; most practitioners use **Fractional Kelly** (½ or ¼).
+
+## How It Works
+
+Kelly compares your estimated true probability with the implied probability of the odds. When you have an edge, it tells you what fraction of bankroll to stake to maximize compound growth.
+
+## Formula
+
+$$f = \frac{bp - q}{b} = \frac{p(b + 1) - 1}{b}$$
+
+Where:
+- $f$ = fraction of bankroll to stake
+- $b$ = net odds received (decimal odds − 1)
+- $p$ = your estimated true probability of winning
+- $q$ = probability of losing ($1 - p$)
+
+**Betfair-adjusted (with commission $c$):**
+
+$$f = \frac{bp - q}{b(1 + c)}$$
+
+**Example:** You estimate a true 60% win probability. Odds are 2.0 (even money, $b = 1$). Full Kelly: $f = (1 × 0.6 - 0.4) / 1 = 0.20$ — bet 20% of bankroll.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `edge` | number | — | Your estimated edge (requires true probability estimate) |
+| `commission` | number | 0.05 | Betfair commission rate (5% default, adjustable with discount) |
+| `fraction` | number | 1.0 | Kelly fraction: 1.0 = full Kelly, 0.5 = half, 0.25 = quarter |
+
+## Risk Assessment
+
+- **Risk Level:** High (Full Kelly), Medium (Half), Low-Medium (Quarter)
+- **Max Drawdown:** 50%+ drawdowns common with Full Kelly
+- **Recommended Bankroll:** 100× average stake for Full Kelly
+- **Ruin Risk:** Low mathematically, but high practically if edge is overestimated
+
+## When to Use
+
+- You can reliably estimate your edge (true probability vs market)
+- Long-term growth is the primary goal
+- You can tolerate high volatility
+- Use **Quarter Kelly** for practical, sustainable betting
+
+## When to Avoid
+
+- You can't estimate true probabilities accurately ("garbage in, garbage out")
+- You have a small bankroll (relative swings too large)
+- You need emotional stability (volatility is stressful)
+- Your bets are correlated (Kelly assumes independence)
+
+## Betfair Exchange Notes
+
+- **Always use the commission-adjusted formula** — otherwise you'll systematically overbet
+- Lay Kelly formula differs; see [Lay Kelly](./lay-kelly.md)
+- Commission discount (e.g., 2% instead of 5%) significantly improves effective growth rate
+
+## Related Plans
+
+- [Fractional Kelly](./kelly-criterion.md#fractional-kelly) — Half/Quarter Kelly (same formula, multiplied by fraction)
+- [Percentage Staking](./percentage-staking.md) — Simpler proportional approach
+- [Square Root](./square-root.md) — Slower-scaling alternative
+- [Lay Kelly](./lay-kelly.md) — Lay-specific Kelly variant
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: labouchere
+name: Labouchere
+category: back
+type: negative-progression
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Cancellation System
+  - Split Martingale
+  - American Progression
+---
+
+# Labouchere Staking Plan
+
+## Overview
+
+A sequence-based negative progression system. You define a sequence of numbers representing your profit target. Each bet stakes the sum of the first and last numbers. Cross them off on wins, add the stake on losses. Clear the sequence = profit target achieved.
+
+## How It Works
+
+1. Write down a sequence of numbers (e.g., 1-2-3-4) — their sum ($10) is your profit target
+2. Each bet: stake = **first number + last number** of the sequence
+3. **Win:** Cross off the first and last numbers used
+4. **Loss:** Add the stake amount to the end of the sequence
+5. Repeat until the sequence is empty (target reached) or you run out of bankroll
+
+**Example (1-2-3-4, target = 10 units):**
+- Bet 1: stake = 1+4 = 5. Lose → sequence becomes 1-2-3-4-5
+- Bet 2: stake = 1+5 = 6. Win → cross off 1 and 5 → 2-3-4
+- Bet 3: stake = 2+4 = 6. Win → cross off → 3
+- Bet 4: stake = 3. Win → empty → profit target achieved
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `sequence` | number[] | [1,2,3,4] | The starting number sequence |
+| `target` | number | 10 | Total profit target (sum of initial sequence) |
+
+## Risk Assessment
+
+- **Risk Level:** High
+- **Max Drawdown:** Severe — long losing streaks add many numbers, inflating stakes rapidly
+- **Recommended Bankroll:** 200+ units
+- **Ruin Risk:** High — sequence can grow without bound during long losing streaks
+
+## When to Use
+
+- You have a specific profit target in mind
+- You can tolerate significant volatility
+- Your system has a reasonable strike rate (40%+)
+
+## When to Avoid
+
+- Small bankrolls — the sequence grows quickly after consecutive losses
+- Low strike-rate systems — sequence expands too fast
+- You lack discipline to follow the sequence mechanically
+
+## Betfair Exchange Notes
+
+- For lay betting, the sequence grows dangerously: adding lay stakes to the sequence means future liability compounds
+- Consider using a **reverse Labouchere** for lay betting (increase on wins, decrease on losses) — see [Lay Labouchere](./lay-labouchere.md)
+
+## Related Plans
+
+- [Fibonacci](./fibonacci.md) — Fixed sequence, similar risk profile
+- [Lay Labouchere](./lay-labouchere.md) — Lay-specific variant
+- [Reverse Labouchere](./parlay.md) — Positive progression version (add on wins, cross on losses)
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-1-4
+name: Lay 1-4 Staking Plan
+category: lay
+type: progression
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Lay 1 to 4
+  - Lay One to Four
+---
+
+# Lay 1-4 Staking Plan
+
+## Overview
+
+A structured lay progression plan using a sequence from 1 to 4 units. After a losing lay bet, move up the sequence. After a win, move down or reset. Similar in concept to the 1-3-2-6 system but adapted for lay betting with different sequence logic.
+
+## How It Works
+
+Sequence: 1 → 2 → 3 → 4 units
+
+- Start at 1 unit
+- **Lose (selection wins):** Move up one step
+- **Win (selection loses):** Move down one step or reset
+- Reset to 1 after completing the sequence or after a win at step 4
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `unit` | number | 10 | Base unit size |
+| `reset_on_win` | boolean | true | Whether to fully reset after a win |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Capped by the 4-unit maximum
+- **Recommended Bankroll:** 30+ units
+
+## When to Use
+
+- Structured progression appeals to you
+- You want a mechanical, easy-to-follow plan
+- Moderate lay strike rates
+
+## When to Avoid
+
+- Very long losing streaks (you'll sit at 4 units for extended periods)
+- You prefer flat staking
+
+## Betfair Exchange Notes
+
+- Define your unit in terms of liability for safer lay betting
+- A 4-unit lay stake at odds of 10.0 = 36 units of liability — size accordingly
+
+## Related Plans
+
+- [1326](./1326.md) — Back betting sequence plan (different sequence)
+- [Lay Ladder](./lay-ladder.md) — Similar concept, user-defined sequence
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-1-point
+name: Lay 1 Point
+category: lay
+type: flat
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - One Point Lay
+---
+
+# Lay 1 Point Staking Plan
+
+## Overview
+
+The simplest lay staking plan: bet exactly 1 point on every lay selection. The lay equivalent of 1 Point Back — minimalist, predictable, and ideal for testing or tracking.
+
+## How It Works
+
+Lay exactly 1 point on every selection. Track results in points. Convert to currency by setting a point value.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `point_value` | number | 10 | Monetary value of 1 point |
+
+## Risk Assessment
+
+- **Risk Level:** Low
+- **Max Drawdown:** 1 point × odds adjustment × consecutive losses
+- **Recommended Bankroll:** 30–50 points
+
+## When to Use
+
+- Testing lay systems
+- Minimalist approach to lay betting
+- Tracking results in points
+
+## When to Avoid
+
+- You want growth or compounding
+
+## Betfair Exchange Notes
+
+- 1 point lay means 1 point stake (not 1 point liability) — be aware of the liability at your odds
+- For safety at higher odds, consider 1 point of liability instead
+
+## Related Plans
+
+- [1 Point Back](./1-point-back.md) — Back equivalent
+- [Lay Level](./lay-level.md) — Same concept, explicit currency
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-accumulator
+name: Lay Accumulator Staking Plan
+category: lay
+type: positive-progression
+risk: medium
+betfair_compatible: true
+aliases:
+  - Accumulator Staking (Lay)
+  - Lay Profit Accumulator
+source: marketfeeder
+---
+
+# Lay Accumulator Staking Plan
+
+## Overview
+
+The lay betting version of the Accumulator Staking Plan. After each winning lay, accumulate the **liability** by adding the base liability plus a percentage of the profit. Reset after a loss or after completing the cycle. Compounds winnings, never chases losses.
+
+## How It Works
+
+1. Start with a base liability (e.g., £5)
+2. **Win lay (selection loses):** Next liability = base liability × step number + % of previous profit
+3. **Lose lay (selection wins):** Reset to base liability
+4. After N steps, reset regardless
+
+**Example (5-step cycle, £5 base liability, 50% accumulation):**
+- Step 1: £5 liability. Win £5. → Step 2: £10 + 50% of £5 = £12.50 liability
+- Step 2: £12.50 liability. Win £12.50. → Step 3: £15 + 50% of £12.50 = £21.25 liability
+- Step 3: £21.25 liability. Lose (pay out). → Reset to £5
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_liability` | number | 5 | Starting liability |
+| `cycle_length` | number | 5 | Steps before forced reset |
+| `profit_pct` | number | 50 | % of profit to accumulate |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Base liability per losing lay (controlled)
+- **Recommended Bankroll:** 30× maximum cycle liability
+- **Ruin Risk:** Low — never chases losses
+
+## When to Use
+
+- Your lay selections cluster in winning streaks
+- You want positive progression for lay betting
+- Conservative approach (loss = reset, not escalate)
+
+## When to Avoid
+
+- Low lay strike rates
+- Isolated winning lays (rarely compound)
+
+## Betfair Exchange Notes
+
+- Uses **liability** as the base, not stake — safer and more predictable
+- Profit is stake won (minus commission), not liability
+- The lay stake is derived: Stake = Liability / (Odds − 1)
+
+## Related Plans
+
+- [Back Accumulator](./back-accumulator.md) — Back equivalent (stake-based)
+- [Ratchet Lay](./ratchet-lay.md) — Similar philosophy, different mechanics
+- [Lay % Liability](./lay-percentage-liability.md) — Proportional alternative
+
+---
+
+## Sources
+
+- **Plan source:** [MarketFeeder — Lay Accumulator Staking](https://marketfeeder.co.uk/learn/triggers/lay-accumulator-staking-plan/)
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-dalembert
+name: Lay D'Alembert
+category: lay
+type: negative-progression
+risk: medium
+betfair_compatible: true
+aliases:
+  - Lay D'Alembert System
+source: marketfeeder
+---
+
+# Lay D'Alembert Staking Plan
+
+## Overview
+
+The D'Alembert system adapted for lay betting. Increase liability by 1 unit after a losing lay, decrease by 1 unit after a winning lay. The moderate linear progression makes it one of the safer negative progression options for lay betting.
+
+## How It Works
+
+1. Start with a base liability unit
+2. **Lose lay (selection wins):** Increase liability by 1 unit
+3. **Win lay (selection loses):** Decrease liability by 1 unit (never below base)
+4. Theory: over time, wins and losses balance, each pair producing +1 unit profit
+
+## Formula
+
+$$L_{i+1} = \begin{cases} L_i + 1 & \text{if lay lost (selection won)} \\ \max(L_i - 1, L_0) & \text{if lay won (selection lost)} \end{cases}$$
+
+Where $L_i$ is the liability for bet $i$, measured in units.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_liability` | number | 1 | Starting liability (units) |
+| `increment` | number | 1 | Units to increase/decrease |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Linear — 10 consecutive losing lays = 55 units lost
+- **Recommended Bankroll:** 100–200 units
+
+## ⚠️ Lay-Specific Warning
+
+D'Alembert for lay betting escalates **liability**, not stake. Each additional unit of liability at odds of 5.0 means the stake only increases by 0.25 units — but the financial risk is explicit and controlled. This makes lay D'Alembert **safer** than back D'Alembert at equivalent unit sizing, because you control the liability directly.
+
+## Betfair Exchange Notes
+
+- **Use liability-based D'Alembert** (not stake-based) for predictable risk
+- At short lay odds, liability and stake are similar; at long odds, stake is much smaller than liability
+
+## Related Plans
+
+- [D'Alembert](./dalembert.md) — Back betting original
+- [Lay Ladder](./lay-ladder.md) — Structured lay progression
+- [Incremental Loss Recovery](./incremental-loss-recovery.md) — Similar linear approach
+
+---
+
+## Sources
+
+- **Plan source:** [MarketFeeder — Lay D'Alembert](https://marketfeeder.co.uk/learn/triggers/lay-dalembert/)
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-goff
+name: Lay Goff Staking Plan
+category: lay
+type: target-based
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Goff Lay Plan
+---
+
+# Lay Goff Staking Plan
+
+## Overview
+
+A target-based lay staking plan with a specific structure for achieving profit targets through lay betting. Uses a divisor-style calculation adapted for the unique characteristics of lay betting.
+
+## How It Works
+
+1. Set a profit target for lay betting
+2. Calculate lay stakes using a divisor that adjusts based on results
+3. **Winning lay (selection loses):** Profit reduces target
+4. **Losing lay (selection wins):** Loss is incorporated into the target
+5. Target reached = cycle complete
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target` | number | 100 | Profit target |
+| `divisor` | number | 4 | Starting divisor |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Target inflation after losing lays
+- **Recommended Bankroll:** 5× target
+
+## When to Use
+
+- Structured, goal-oriented lay betting
+- You want a target to work toward
+
+## When to Avoid
+
+- Low lay strike rates (target grows without being reduced)
+- You prefer simpler lay staking
+
+## Betfair Exchange Notes
+
+- Factor commission into target reduction (winning lay profit = stake × (1−commission))
+
+## Related Plans
+
+- [Bookies Bank](./bookies-bank.md) — Back betting divisor plan
+- [Lay Liability](./lay-liability.md) — Simpler alternative
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-hipro86-sp4
+name: Lay HiPro86 SP4
+category: lay
+type: recovery
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - HiPro86 SP4 Lay
+---
+
+# Lay HiPro86 SP4 Staking Plan
+
+## Overview
+
+A specialized lay recovery plan with a specific progression structure. The "SP4" designation refers to a 4-step progression designed for high-probability lay systems. Popularized in betting forums for its structured approach to lay recovery.
+
+## How It Works
+
+Uses a 4-step progression sequence for lay stakes. After each losing lay, move to the next step. After a winning lay, reset or step back. The 4-step limit provides a natural boundary.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `step_stakes` | number[] | [10,25,60,150] | Stakes for each of the 4 steps |
+| `reset_policy` | string | "full" | Reset after a win ("full" or "step_back") |
+
+## Risk Assessment
+
+- **Risk Level:** High
+- **Max Drawdown:** Sum of all 4 steps at worst-case odds
+- **Recommended Bankroll:** Must cover 4-step sequence × max liability
+- **Ruin Risk:** High — but bounded by the 4-step limit
+
+## When to Use
+
+- High-probability lay systems (implied by the name)
+- You want a recovery plan with a hard step limit
+- You accept the risk of the 4-step sequence failing
+
+## When to Avoid
+
+- Low lay strike rates — the 4-step limit provides a floor but the stakes are large
+- You're uncomfortable with the step sizes
+
+## Betfair Exchange Notes
+
+- Calculate the liability for each step at your typical lay odds
+- Step 4 at £150 stake and 5.0 odds = £600 liability — size accordingly
+
+## Related Plans
+
+- [Lay Maria](./lay-maria.md) — Alternative lay recovery
+- [Lay Ladder](./lay-ladder.md) — User-defined ladder approach
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-kelly
+name: Lay Kelly Criterion
+category: lay
+type: proportional
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Kelly for Lay Betting
+---
+
+# Lay Kelly Criterion
+
+## Overview
+
+The Kelly Criterion adapted for lay betting. Determines the optimal fraction of bankroll to risk as liability when you have an edge on a lay selection. As with back Kelly, most practitioners should use fractional Kelly.
+
+## How It Works
+
+For a lay bet, your "edge" comes from the selection losing more often than the odds imply. Kelly tells you what fraction of bankroll to risk as liability.
+
+## Formula
+
+$$f = \frac{q - p \times b}{b}$$
+
+Where:
+- $f$ = fraction of bankroll to risk as **liability**
+- $b$ = net odds (decimal odds − 1) — this is what you pay per unit won
+- $p$ = probability the selection WINS (you lose the lay)
+- $q$ = probability the selection LOSES (you win the lay) = $1 - p$
+
+**Betfair-adjusted (with commission $c$):**
+
+$$f = \frac{q - p \times b}{b \times (1 + c)}$$
+
+**Example:** You estimate only a 30% chance the selection wins. Lay odds are 3.0 ($b = 2$). $f = (0.7 - 0.3 × 2) / 2 = 0.05$ — risk 5% of bankroll as liability.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `edge` | number | — | Requires true win probability estimate (selection winning = you losing) |
+| `commission` | number | 0.05 | Betfair commission rate |
+| `fraction` | number | 0.25 | Kelly fraction (quarter recommended for lay) |
+
+## Risk Assessment
+
+- **Risk Level:** High (Full), Medium (Quarter)
+- **Max Drawdown:** Significant at full Kelly
+- **Recommended Bankroll:** 200× average liability for quarter Kelly
+- **Ruin Risk:** Higher than back Kelly — lay odds typically longer, meaning more volatility
+
+## When to Use
+
+- You can accurately estimate the probability of selections winning (you losing)
+- You specialize in lay betting with a proven edge
+- Always use **fractional** (quarter or less)
+
+## When to Avoid
+
+- You're new to Kelly or lay betting
+- Your edge estimates are rough
+- The recommended fraction exceeds your comfort zone
+
+## Betfair Exchange Notes
+
+- The lay Kelly formula differs from back Kelly — make sure you use the right one
+- Commission significantly impacts lay profitability at scale
+- Consider using Lay % Liability as a simpler, safer alternative
+
+## Related Plans
+
+- [Kelly Criterion](./kelly-criterion.md) — Back betting equivalent
+- [Lay % Liability](./lay-percentage-liability.md) — Simpler proportional lay staking
+- [Lay Liability](./lay-liability.md) — Fixed liability (no edge estimation)
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-labouchere
+name: Lay Labouchere
+category: lay
+type: negative-progression
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Lay Cancellation System
+---
+
+# Lay Labouchere Staking Plan
+
+## Overview
+
+The Labouchere cancellation system adapted for lay betting. Uses a number sequence where each lay stake equals the sum of the first and last numbers. Cross off on winning lays (selection loses), add the stake on losing lays (selection wins).
+
+## How It Works
+
+1. Write a number sequence (e.g., 1-2-3-4, sum = 10 = profit target)
+2. Each lay: stake (liability target) = first + last number
+3. **Win lay (selection loses):** Cross off first and last numbers
+4. **Lose lay (selection wins):** Add the stake to the end of the sequence
+5. Clear the sequence = target achieved
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `sequence` | number[] | [1,2,3,4] | Starting number sequence |
+| `target_type` | string | "stake" | Whether numbers represent stake or liability |
+
+## Risk Assessment
+
+- **Risk Level:** High
+- **Max Drawdown:** Sequence grows without bound on losing streaks
+- **Recommended Bankroll:** 200+ units
+- **Ruin Risk:** High — lay losses add large numbers to the sequence
+
+## ⚠️ Critical Warning
+
+Labouchere for lay betting is extremely dangerous without modifications. Each losing lay adds the stake to the sequence, but the actual loss is stake × (odds−1). This means the sequence understates the true financial damage. **Use a liability-based sequence** and limit sequence length.
+
+## Betfair Exchange Notes
+
+- **Strongly recommend** using the sequence to represent liability targets, not stake amounts
+- Consider a maximum sequence length (e.g., stop and reset at 10 numbers)
+
+## Related Plans
+
+- [Labouchere](./labouchere.md) — Back betting original
+- [Lay Ladder](./lay-ladder.md) — Less aggressive alternative
+- [Lay Maria](./lay-maria.md) — Alternative lay recovery
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-ladder
+name: Lay Ladder
+category: lay
+type: progression
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Lay Staking Ladder
+---
+
+# Lay Ladder Staking Plan
+
+## Overview
+
+A structured progression system for lay betting. After each loss, move up the ladder (increase stake). After each win, move down or reset. The ladder is predefined with escalating stake levels.
+
+## How It Works
+
+Define a ladder of stake levels (or liability levels). Start at the bottom:
+
+- **Lose (selection wins):** Move up one rung (higher stake)
+- **Win (selection loses):** Move down one or more rungs (lower stake) or reset to bottom
+
+**Example ladder (stakes):** £10 → £15 → £25 → £40 → £65 → £105...
+
+The exact ladder can be fixed amounts, percentages, or follow a sequence (Fibonacci-like).
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `ladder` | number[] | [10,15,25,40,65,105] | The stake ladder sequence |
+| `steps_down` | number | 1 | How many rungs to drop after a win |
+
+## Risk Assessment
+
+- **Risk Level:** Medium (depends on ladder design)
+- **Max Drawdown:** Controlled by ladder length and step sizes
+- **Recommended Bankroll:** Must cover the sum of all ladder rungs
+- **Ruin Risk:** Medium — predefined ladder limits runaway escalation
+
+## When to Use
+
+- You want more structure than ad-hoc progression
+- Your lay strike rate is reasonable
+- You prefer mechanical rules to discretionary staking
+
+## When to Avoid
+
+- The ladder is poorly calibrated to your strike rate and odds
+- Your lay selections have very high odds (liability escalates fast)
+
+## Betfair Exchange Notes
+
+- **Recommendation:** Build your ladder based on **liability**, not stake. A stake-based ladder at high odds creates dangerous liability jumps.
+- Example liability ladder: £50 → £75 → £125 → £200 → £325...
+
+## Related Plans
+
+- [Fibonacci](./fibonacci.md) — A natural ladder (1,1,2,3,5,8...)
+- [Lay Labouchere](./lay-labouchere.md) — Sequence-based lay progression
+- [Lay Maria](./lay-maria.md) — More aggressive lay recovery
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-level
+name: Lay Level Stakes
+category: lay
+type: flat
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - Lay Flat Staking
+  - Lay Fixed Stake
+---
+
+# Lay Level Stakes
+
+## Overview
+
+The simplest lay staking plan: stake the same fixed amount on every lay bet. Your **liability** varies with odds, but your **stake** (the backer's amount you stand to win) is constant.
+
+## How It Works
+
+Bet the same amount on every lay selection. If the selection loses (you win), you gain the stake minus commission. If the selection wins (you lose), you pay out stake × (odds − 1).
+
+```
+Stake = Fixed Amount
+Liability = Stake × (Odds − 1)
+```
+
+**Example:** £10 lay stake. At odds of 3.0: win £10 (less commission) or lose £20. At odds of 10.0: win £10 or lose £90.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `stake` | number | 10 | Fixed lay stake (backer's amount) |
+
+## Risk Assessment
+
+- **Risk Level:** Low (stake-side), Variable (liability-side)
+- **Max Drawdown:** Depends on odds — high odds = large liability per loss
+- **Recommended Bankroll:** Must cover worst-case liability × consecutive losses
+- **Ruin Risk:** Low if stakes are sized for worst-case odds
+
+## When to Use
+
+- Beginners learning lay betting
+- Your lay selections have consistently low odds (< 5.0)
+- You want predictable winnings per successful lay
+
+## ⚠️ Critical Warning
+
+Unlike back betting where your stake IS your liability, lay betting decouples them. A £10 lay stake at odds of 10.0 risks £90. **Always calculate liability, not stake, when sizing for bankroll.**
+
+## Betfair Exchange Notes
+
+- Commission (default 5%) deducted from winnings: profit = stake × (1 − commission)
+- Ensure sufficient balance to cover liability before placing lay bets
+
+## Related Plans
+
+- [Lay Liability](./lay-liability.md) — Fixed liability instead of fixed stake (safer at high odds)
+- [Lay Percentage](./lay-percentage.md) — Stake a % of bankroll
+- [Level Stakes](./level-stakes.md) — Back betting equivalent
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-liability
+name: Lay Fixed Liability
+category: lay
+type: flat
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - Lay Liability Staking
+  - Fixed Risk Lay
+---
+
+# Lay Fixed Liability
+
+## Overview
+
+Instead of fixing the lay stake, fix your **liability** (the amount you risk losing). Your stake adjusts based on odds so that every losing lay bet costs you the same amount. This is the safer, recommended approach for lay betting at varied odds.
+
+## How It Works
+
+$$Stake = \frac{Fixed\ Liability}{Odds - 1}$$
+
+**Example:** Fixed liability = £100. At odds of 3.0: stake = £100/2 = £50. At odds of 10.0: stake = £100/9 = £11.11. In both cases, a loss costs exactly £100.
+
+## Formula
+
+$$S = \frac{L}{o - 1}$$
+
+Where:
+- $S$ = lay stake (backer's amount)
+- $L$ = fixed liability (your maximum loss)
+- $o$ = decimal lay odds
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `liability` | number | 100 | Fixed amount at risk per losing lay bet |
+
+## Risk Assessment
+
+- **Risk Level:** Low (controlled, predictable risk)
+- **Max Drawdown:** Liability × consecutive losses (very predictable)
+- **Recommended Bankroll:** 20–50× liability
+- **Ruin Risk:** Low — risk is fixed per bet
+
+## When to Use
+
+- Your lay selections have widely varying odds
+- You want predictable, consistent risk per bet
+- Bankroll management is a priority
+- **Recommended for most lay bettors**
+
+## When to Avoid
+
+- Very short lay odds (near 1.01) — stake becomes enormous relative to winnings
+- You prefer consistent winnings rather than consistent losses
+
+## Comparison: Fixed Stake vs Fixed Liability
+
+| Scenario | Fixed Stake (£10) | Fixed Liability (£100) |
+|----------|-------------------|------------------------|
+| Lay at 2.0, lose | Lose £10 | Lose £100 |
+| Lay at 10.0, lose | Lose £90 | Lose £100 |
+| Lay at 2.0, win | Win £10 | Win £100 |
+| Lay at 10.0, win | Win £10 | Win £11.11 |
+
+## Betfair Exchange Notes
+
+- This is the **recommended default** for exchange lay betting
+- Winnings vary with odds (higher odds = smaller stake = smaller win), but risk is constant
+- Commission on winnings: profit = stake × (1 − commission)
+
+## Related Plans
+
+- [Lay Level](./lay-level.md) — Fixed stake (variable risk)
+- [Lay % Liability](./lay-percentage-liability.md) — Liability as % of bankroll
+- [Fixed Stake](./fixed-stake.md) — Back betting equivalent (fixed profit target)
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-maria-liability
+name: Lay Maria Liability
+category: lay
+type: recovery
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Maria Liability Plan
+---
+
+# Lay Maria Liability Staking Plan
+
+## Overview
+
+A safer variant of Lay Maria that operates on **liability** rather than stake. After a loss, the liability escalates — but stakes are calculated to keep liability controlled. More predictable risk than standard Lay Maria.
+
+## How It Works
+
+1. Set a base liability (your maximum loss per bet initially)
+2. **Lose (selection wins):** Increase the target liability for the next bet
+3. **Win (selection loses):** Reduce or reset liability toward base
+4. Stake is derived: Stake = Liability / (Odds − 1)
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_liability` | number | 100 | Starting liability per bet |
+| `escalation` | number | 1.5 | Liability multiplier after a loss |
+
+## Risk Assessment
+
+- **Risk Level:** High (but more controlled than standard Lay Maria)
+- **Max Drawdown:** Predictable — you control liability, not stake
+- **Recommended Bankroll:** 50× base liability
+- **Ruin Risk:** Medium-high — liability grows, but it's explicit
+
+## When to Use
+
+- You want lay recovery but prefer liability-based control
+- Your lay odds vary and you want consistent risk sizing
+
+## When to Avoid
+
+- Standard Lay Maria caveats apply — still a recovery plan
+- Use a stop-loss
+
+## Betfair Exchange Notes
+
+- This is the **recommended** version of Lay Maria for exchange betting
+- Liability is explicit and manageable
+
+## Related Plans
+
+- [Lay Maria](./lay-maria.md) — Stake-based variant (riskier)
+- [Lay % Liability](./lay-percentage-liability.md) — Non-recovery proportional alternative
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-maria
+name: Lay Maria
+category: lay
+type: recovery
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Maria Lay Plan
+---
+
+# Lay Maria Staking Plan
+
+## Overview
+
+An aggressive lay recovery staking plan. After a losing lay bet (selection wins), stakes escalate to recover the loss. Named after a popular betting forum strategy, it's designed for high-strike-rate lay systems.
+
+## How It Works
+
+1. Start with a base lay stake
+2. **Lose (selection wins):** Increase stake to recover the loss + target profit
+3. **Win (selection loses):** Reset or reduce toward base stake
+4. The escalation can be aggressive — designed for lay systems with very high strike rates
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting lay stake |
+| `recovery_multiplier` | number | 1.5 | How aggressively to escalate after losses |
+
+## Risk Assessment
+
+- **Risk Level:** High
+- **Max Drawdown:** Significant — lay losses are expensive (liability = stake × (odds−1))
+- **Recommended Bankroll:** 500+ units
+- **Ruin Risk:** High — escalation compounds with lay liability
+
+## ⚠️ Critical Warning
+
+Lay recovery plans are among the most dangerous staking approaches. A lay loss means you pay out the backer's stake × (odds−1). Escalating after lay losses multiplies an already-large liability. Use extreme caution and tight stop-losses.
+
+## When to Use
+
+- Very high lay strike rate (>80%)
+- Low lay odds (<3.0)
+- You have a very large bankroll
+
+## When to Avoid
+
+- Lay odds above 5.0 (liability is too large)
+- Strike rate below 70%
+- You don't have a strict stop-loss
+
+## Betfair Exchange Notes
+
+- Always calculate liability, not stake, when sizing for bankroll
+- Consider [Lay Maria Liability](./lay-maria-liability.md) for a liability-based variant
+
+## Related Plans
+
+- [Lay Maria Liability](./lay-maria-liability.md) — Liability-based variant (safer)
+- [Lay Ladder](./lay-ladder.md) — More controlled lay progression
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-mixed
+name: Lay Mixed Staking Plan
+category: lay
+type: hybrid
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Mixed Lay Staking
+---
+
+# Lay Mixed Staking Plan
+
+## Overview
+
+A hybrid lay staking plan that combines elements of flat staking and proportional staking. Part of the stake is fixed, part scales with bankroll — providing a middle ground between conservative and growth-oriented approaches.
+
+## How It Works
+
+The stake is composed of two parts:
+1. **Fixed component:** A constant amount (like lay level)
+2. **Proportional component:** A percentage of bankroll (like lay percentage)
+
+$$Stake = F + (B \times p)$$
+
+Where $F$ = fixed amount, $B$ = bankroll, $p$ = percentage.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `fixed_stake` | number | 5 | Fixed portion of the stake |
+| `percentage` | number | 1 | Percentage of bankroll for proportional portion |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Between flat and proportional — moderate
+- **Recommended Bankroll:** 50× total initial stake
+
+## When to Use
+
+- You want some growth but find pure proportional too volatile
+- You want a blend of predictability and compounding
+
+## When to Avoid
+
+- Simplicity is paramount (use pure flat or pure proportional)
+- Very small bankrolls (proportional component adds negligible amount)
+
+## Betfair Exchange Notes
+
+- For lay, ensure both components are sized with liability in mind
+- The proportional component creates compounding; the fixed component creates stability
+
+## Related Plans
+
+- [Lay Level](./lay-level.md) — Pure flat
+- [Lay Percentage](./lay-percentage.md) — Pure proportional
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-multi-link-doubles
+name: Lay Multi-Link Doubles
+category: lay
+type: cycle-based
+risk: medium
+betfair_compatible: true
+aliases:
+  - Lay Cycle Doubles
+source: marketfeeder
+---
+
+# Lay Multi-Link Doubles Plan
+
+## Overview
+
+The lay betting adaptation of the Multi-Link Doubles plan. Uses the same cycle-based decreasing-percentage structure, but for lay bets with liability-based sizing. Winning lay profits are partially redistributed across remaining bets in the cycle.
+
+## How It Works
+
+1. Cycle of N bets with decreasing liability percentages
+2. Bet 1: 5% of starting bank as liability
+3. Bet 2: 4% of starting bank + fraction of Bet 1's profit
+4. Continue decreasing to Bet N: 1% + accumulated winnings
+5. Cycle restarts with new bank
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `starting_bank` | number | — | Bank at cycle start |
+| `cycle_length` | number | 6 | Number of bets per cycle |
+| `starting_pct` | number | 5 | First liability as % of bank |
+| `ending_pct` | number | 1 | Last liability as % of bank |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Decreasing within cycle; liability-based sizing controls risk
+- **Recommended Bankroll:** 20× first liability
+
+## When to Use
+
+- Lay strategies with consistent results
+- You want structured, cycle-based lay betting
+
+## When to Avoid
+
+- Inconsistent lay strike rates
+- You prefer simpler lay plans
+
+## Betfair Exchange Notes
+
+- Liability-based sizing is safer for lay betting
+- Commission adjustment built into profit redistribution
+
+## Related Plans
+
+- [Back Multi-Link Doubles](./back-multi-link-doubles.md) — Back equivalent
+- [Lay Accumulator](./lay-accumulator.md) — Positive progression alternative
+
+---
+
+## Sources
+
+- **Plan source:** [MarketFeeder — Lay Multi-Link Doubles](https://marketfeeder.co.uk/learn/triggers/lay-multi-link-doubles/)
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-percentage-liability
+name: Lay % Liability
+category: lay
+type: proportional
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Lay Percentage Liability
+  - Proportional Liability Lay
+---
+
+# Lay Percentage Liability
+
+## Overview
+
+Stake such that your **liability** (not your stake) equals a fixed percentage of your bankroll. This is the safer proportional approach for lay betting — your risk scales predictably regardless of odds.
+
+## How It Works
+
+$$Stake = \frac{Bankroll \times (percentage / 100)}{Odds - 1}$$
+
+**Example:** £1,000 bankroll at 2% liability. At odds of 3.0: stake = £20/2 = £10, liability = £20. At odds of 10.0: stake = £20/9 = £2.22, liability = £20. In both cases, risk = 2% of bankroll.
+
+## Formula
+
+$$S = \frac{B \times p}{o - 1}$$
+
+Where:
+- $S$ = lay stake
+- $B$ = current bankroll
+- $p$ = liability percentage (as decimal, e.g., 0.02)
+- $o$ = decimal lay odds
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `percentage` | number | 2 | Percentage of bankroll to risk as liability |
+
+## Risk Assessment
+
+- **Risk Level:** Medium (consistent % risk per bet)
+- **Max Drawdown:** Similar to back % staking — controlled by the percentage
+- **Recommended Bankroll:** 50× liability (50× 2% = 100% of bankroll, i.e., any bankroll works)
+- **Ruin Risk:** Low — risk is always a fixed fraction
+
+## When to Use
+
+- **Recommended for most lay bettors** using proportional staking
+- Your lay selections have widely varying odds
+- You want bankroll protection with compounding growth
+
+## When to Avoid
+
+- Very short lay odds (near 1.01) — stake becomes very large for a tiny win
+- You want consistent winnings rather than consistent risk
+
+## Betfair Exchange Notes
+
+- This is the lay equivalent of back percentage staking and is the most sensible default for proportional lay betting
+- Winnings vary: lower odds = larger stake = larger win; higher odds = smaller stake = smaller win
+
+## Related Plans
+
+- [Lay Liability](./lay-liability.md) — Fixed liability (non-compounding)
+- [Lay Percentage](./lay-percentage.md) — % of stake, not liability (riskier)
+- [Percentage Staking](./percentage-staking.md) — Back betting equivalent
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-percentage-recovery
+name: Lay % Recovery
+category: lay
+type: recovery
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Lay Percentage Recovery
+---
+
+# Lay % Recovery Staking Plan
+
+## Overview
+
+A lay recovery plan that escalates stakes as a percentage of the loss amount (rather than full recovery). After a losing lay, the next stake aims to recover a percentage of the loss, making it less aggressive than full recovery systems.
+
+## How It Works
+
+1. Start with a base lay stake
+2. **Lose (selection wins):** Next stake aims to recover X% of the loss
+3. **Win (selection loses):** Reset or step down
+4. The recovery percentage (e.g., 50%) controls aggression
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting lay stake |
+| `recovery_pct` | number | 50 | Percentage of loss to recover per step |
+| `max_steps` | number | 8 | Maximum recovery steps before forced reset |
+
+## Risk Assessment
+
+- **Risk Level:** High (but lower than full recovery)
+- **Max Drawdown:** Partial recovery = slower escalation
+- **Recommended Bankroll:** 200+ units
+
+## When to Use
+
+- You want recovery staking but find full recovery too aggressive
+- Your lay system has moderate strike rate
+
+## When to Avoid
+
+- Still a recovery plan — all the standard warnings apply
+- You don't have a max_steps limit
+
+## Betfair Exchange Notes
+
+- Recovery percentage applies to the **financial loss** (liability paid out), not the stake
+- A 50% recovery after losing £100 liability means next bet aims to win £50
+
+## Related Plans
+
+- [Lay Maria](./lay-maria.md) — More aggressive lay recovery
+- [Recovery](./recovery.md) — Back betting equivalent
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-percentage-up-down
+name: Lay % Up Down
+category: lay
+type: progression
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Lay Percentage Up/Down
+---
+
+# Lay % Up Down Staking Plan
+
+## Overview
+
+The lay betting adaptation of the Up X Down Y plan — but operating on percentages rather than absolute amounts. After a losing lay, increase the percentage; after a winning lay, decrease it.
+
+## How It Works
+
+- Stake = Bankroll × current percentage
+- **Lose lay (selection wins):** Increase percentage by X%
+- **Win lay (selection loses):** Decrease percentage by Y%
+- Typically X > Y (faster up, slower down) for mild negative progression
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_pct` | number | 1 | Starting percentage of bankroll |
+| `X` | number | 0.5 | Percentage points to increase after a loss |
+| `Y` | number | 0.25 | Percentage points to decrease after a win |
+| `max_pct` | number | 5 | Maximum percentage cap |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Controlled by max_pct cap
+- **Recommended Bankroll:** 100× initial stake
+
+## When to Use
+
+- You want progressive lay staking with percentage-based control
+- You prefer caps on escalation
+
+## When to Avoid
+
+- You want flat or fixed staking
+
+## Betfair Exchange Notes
+
+- Base the percentage on **liability** rather than stake for safer sizing
+- max_pct is critical — without it, percentage can drift dangerously high
+
+## Related Plans
+
+- [Up X Down Y](./up-x-down-y.md) — Absolute-unit back equivalent
+- [Lay % Liability](./lay-percentage-liability.md) — Non-progressive alternative
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-percentage
+name: Lay Percentage Staking
+category: lay
+type: proportional
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Lay % Staking
+  - Proportional Lay
+---
+
+# Lay Percentage Staking
+
+## Overview
+
+Stake a fixed percentage of your current bankroll on each lay bet. This means your **stake** (the backer's amount) scales with bankroll, but your **liability** also scales with odds — making it riskier than percentage staking for back bets.
+
+## How It Works
+
+$$Stake = Bankroll \times \frac{percentage}{100}$$
+
+$$Liability = Stake \times (Odds - 1)$$
+
+**Example:** £1,000 bankroll at 2%. At odds of 3.0: stake = £20, liability = £40. At odds of 10.0: stake = £20, liability = £180 (18% of bankroll!).
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `percentage` | number | 1 | Percentage of bankroll to stake (use lower than back % staking) |
+
+## Risk Assessment
+
+- **Risk Level:** Medium (higher than back % staking due to liability multiplier)
+- **Max Drawdown:** Accelerated at high odds
+- **Recommended Bankroll:** Large — liability can spike at high odds
+- **Ruin Risk:** Medium — high-odds losses can take large chunks of bankroll
+
+## ⚠️ Critical Warning
+
+2% of bankroll as a lay stake at odds of 10.0 risks 18% of bankroll. Use a **much lower** percentage for lay betting than you would for back betting. Consider 0.5–1% maximum.
+
+## Betfair Exchange Notes
+
+- For most lay bettors, [Lay % Liability](./lay-percentage-liability.md) is safer — it ties the percentage to liability, not stake
+- Always check the liability before confirming a lay bet
+
+## Related Plans
+
+- [Lay % Liability](./lay-percentage-liability.md) — Safer: % of bankroll as liability, not stake
+- [Percentage Staking](./percentage-staking.md) — Back betting equivalent
+- [Lay Level](./lay-level.md) — Simpler flat alternative
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-whitaker
+name: Lay Whitaker
+category: lay
+type: hybrid
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - Lay Whittaker
+---
+
+# Lay Whitaker Staking Plan
+
+## Overview
+
+The lay betting adaptation of the Whitaker staking plan. A conservative approach: stake increases by a small fixed amount after each winning lay bet, and never decreases. Designed for steady, low-risk lay betting growth.
+
+## How It Works
+
+- Start with a base lay stake
+- After each **winning** lay (selection loses): Increase stake by a small increment
+- After each **losing** lay (selection wins): Stake stays the same (never decreases)
+- Growth is slow but one-directional
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting lay stake |
+| `increment` | number | 0.50 | Amount to increase after each winning lay |
+
+## Risk Assessment
+
+- **Risk Level:** Low
+- **Max Drawdown:** Similar to lay level stakes — no escalation after losses
+- **Recommended Bankroll:** 30–50× base stake
+- **Ruin Risk:** Very low
+
+## When to Use
+
+- Conservative lay betting approach
+- Long-term, slow bankroll building
+- You want something slightly more dynamic than flat lay staking
+
+## When to Avoid
+
+- Quick growth expectations
+- You want to capitalize on hot streaks more aggressively
+
+## Betfair Exchange Notes
+
+- For lay betting, ensure the increment is manageable at your typical lay odds
+- Consider whether the increment applies to stake or liability
+
+## Related Plans
+
+- [Whitaker](./whitaker.md) — Back betting original
+- [Lay Level](./lay-level.md) — Even simpler (no increments)
+- [Lay Percentage](./lay-percentage.md) — Proportional alternative
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lay-xyz
+name: Lay XYZ
+category: lay
+type: custom
+risk: variable
+betfair_compatible: true
+aliases:
+source: tsm
+  - Lay Custom Staking
+---
+
+# Lay XYZ Staking Plan
+
+## Overview
+
+The lay betting adaptation of the XYZ staking plan. Fully customizable along three axes (X, Y, Z) for lay betting, allowing you to define custom stake progression rules, reset conditions, and base sizing.
+
+## How It Works
+
+Same configurable framework as XYZ but optimized for lay betting:
+- **X:** Base lay stake or liability
+- **Y:** Progression rule after winning/losing lays
+- **Z:** Reset conditions
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `X` | number/string | — | Base size (stake or liability) |
+| `Y_rule` | string | — | Progression direction and amount |
+| `Z_condition` | string | — | Reset trigger |
+
+## Risk Assessment
+
+- **Risk Level:** Variable (depends on configuration)
+- **Max Drawdown:** Configurable
+
+## When to Use
+
+- Custom lay staking strategies
+- Experimentation with lay-specific progression rules
+
+## When to Avoid
+
+- You're not experienced with lay betting progression
+- You haven't thoroughly tested your configuration
+
+## Betfair Exchange Notes
+
+- **Critical:** Configure Y rules around liability, not stake, unless you fully understand the implications
+
+## Related Plans
+
+- [XYZ](./xyz.md) — Back betting original
+- [Lay Kelly](./lay-kelly.md) — Edge-based proportional alternative
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: level-stakes
+name: Level Stakes
+category: back
+type: flat
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - Fixed Stakes
+  - Flat Staking
+  - Unit Staking
+---
+
+# Level Stakes
+
+## Overview
+
+The simplest staking plan: bet the same fixed amount on every selection. No adjustments for confidence, odds, bankroll size, or recent results. Also known as "level staking", "flat staking", or "unit staking".
+
+## How It Works
+
+Choose a fixed monetary amount (your "unit" or "point"). Every bet uses exactly this amount.
+
+```
+Stake = Fixed Amount
+```
+
+**Example:** £10 per bet, every bet, regardless of anything else.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `stake` | number | 10 | Fixed monetary amount per bet |
+
+## Risk Assessment
+
+- **Risk Level:** Low
+- **Max Drawdown:** Proportional to losing streak length × stake
+- **Recommended Bankroll:** 20–50× stake (£200–£500 for £10 stakes)
+- **Ruin Risk:** Very low — can only go broke through prolonged losing at fixed rate
+
+## When to Use
+
+- You're a beginner learning bankroll management
+- Your selections have consistent win rates and odds
+- You want maximum simplicity and predictability
+- You're tracking results in "points" rather than currency
+
+## When to Avoid
+
+- You have a proven edge and want to compound growth
+- Your selections vary significantly in confidence/odds
+- You want to accelerate recovery after losing streaks
+
+## Betfair Exchange Notes
+
+- Works identically for back and lay betting
+- For lay betting, ensure your fixed stake's liability (stake × (odds − 1)) doesn't exceed your comfort zone at higher odds
+- No commission adjustment needed — simplicity is the point
+
+## Related Plans
+
+- [Percentage Staking](./percentage-staking.md) — Proportional alternative
+- [Fixed Stake](./fixed-stake.md) — Similar concept
+- [Lay Level](./lay-level.md) — Lay-specific variant
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: lp28
+name: L.P.28 Staking Plan
+category: back
+type: target-based
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - LP28
+  - Loss Proof 28
+---
+
+# L.P.28 Staking Plan
+
+## Overview
+
+A target-based staking plan with a 28-step structure. Designed to provide a systematic approach to achieving profit targets with controlled stake escalation across up to 28 bets per cycle.
+
+## How It Works
+
+1. Divide the profit target across up to 28 steps
+2. Each step has a calculated stake based on remaining target and current position
+3. Wins reduce the remaining target; losses are absorbed into future stakes
+4. The 28-step structure provides a defined cycle length
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target` | number | 100 | Total profit target |
+| `steps` | number | 28 | Number of steps in the plan |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Spread across 28 steps — moderate
+- **Recommended Bankroll:** 10× target
+- **Ruin Risk:** Medium-low — the 28-step limit provides a natural stop
+
+## When to Use
+
+- You prefer structured, time-bound staking cycles
+- Your system has consistent results over 28-bet periods
+- You want a plan with a defined endpoint
+
+## When to Avoid
+
+- Very inconsistent results
+- You prefer open-ended plans
+
+## Betfair Exchange Notes
+
+- Works for both back and lay
+- For lay, structure the target around liability targets
+
+## Related Plans
+
+- [Retirement](./retirement.md) — Another target-based plan
+- [6 Point Divisor](./6-point-divisor.md) — Divisor-based alternative
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: martingale
+name: Martingale
+category: back
+type: negative-progression
+risk: very-high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Classic Martingale
+  - Double After Loss
+---
+
+# Martingale Staking Plan
+
+## Overview
+
+The most infamous negative progression system: double your stake after every loss. The theory: when you eventually win, you recover all previous losses plus one unit of profit. In practice, it's extremely dangerous — losing streaks cause exponential stake growth and will exhaust any finite bankroll.
+
+## How It Works
+
+1. Start with 1 unit
+2. **Loss:** Double the stake for the next bet
+3. **Win:** Reset to 1 unit
+4. After any win, you are exactly +1 unit for that cycle
+
+**Example:** £10 → lose → £20 → lose → £40 → lose → £80 → win (+£80). Net: −£10 −£20 −£40 +£80 = +£10 (1 unit profit).
+
+## Formula
+
+$$S_{i+1} = \begin{cases} 2 \times S_i & \text{if loss} \\ S_0 & \text{if win} \end{cases}$$
+
+After $n$ consecutive losses, stake = $S_0 \times 2^n$
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_unit` | number | 1 | Starting stake |
+| `max_steps` | number | — | Optional cap on doublings (recommended) |
+
+## Risk Assessment
+
+- **Risk Level:** Very High
+- **Max Drawdown:** Exponential — 10 consecutive losses requires 1,024× base unit
+- **Recommended Bankroll:** 1,000+ units (to survive 9 consecutive losses)
+- **Ruin Risk:** Very high — finite bankroll + infinite doubling = eventual ruin
+
+## The Mathematics of Ruin
+
+| Consecutive Losses | Stake (units) | Cumulative Loss |
+|-------------------|---------------|-----------------|
+| 1 | 2 | 1 |
+| 2 | 4 | 3 |
+| 3 | 8 | 7 |
+| 4 | 16 | 15 |
+| 5 | 32 | 31 |
+| 6 | 64 | 63 |
+| 7 | 128 | 127 |
+| 8 | 256 | 255 |
+| 9 | 512 | 511 |
+| 10 | 1,024 | 1,023 |
+
+At 10 consecutive losses (not rare in betting), you need over 1,000× your base unit just to place the next bet.
+
+## ⚠️ Critical Warning
+
+**Martingale is mathematically guaranteed to fail** given:
+1. A finite bankroll
+2. A maximum bet limit (Betfair has one)
+3. An unbounded number of bets
+
+The only way Martingale "works" is with infinite wealth and no bet limits — neither exists. Every professional betting resource advises against it.
+
+## When to Use
+
+- Almost never. The one legitimate context: very short-term, tightly stop-lossed sequences where you fully understand and accept the risk.
+
+## When to Avoid
+
+- Always, unless you have a specific, bounded strategy and enormous bankroll relative to base unit
+- Lay betting (liability compounds even faster)
+- Any serious long-term betting
+
+## Betfair Exchange Notes
+
+- Betfair has maximum liability limits — you will hit them during a Martingale sequence
+- For lay Martingale, doubling liability is even more dangerous than doubling stake
+- Commission means the "1 unit profit" per cycle is actually less than 1 unit
+
+## Related Plans
+
+- [Fibonacci](./fibonacci.md) — Slower negative progression (Fibonacci sequence)
+- [D'Alembert](./dalembert.md) — Linear progression (much safer)
+- [Incremental Loss Recovery](./incremental-loss-recovery.md) — Controlled linear recovery
+- [Recovery](./recovery.md) — Targets specific loss recovery rather than arbitrary doubling
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: oscars-grind
+name: Oscar's Grind
+category: back
+type: positive-progression
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - Oscar's System
+  - The Grind
+---
+
+# Oscar's Grind
+
+## Overview
+
+A slow, grinding positive progression: increase your stake by 1 unit after a win — but ONLY if the resulting bet wouldn't produce more than 1 unit of profit for the entire sequence. The goal is to "grind out" exactly 1 unit of profit per cycle. One of the most conservative progression systems ever devised.
+
+## How It Works
+
+1. Start at 1 unit. The goal is to end the sequence +1 unit.
+2. **Win:** If the next bet (at current stake + 1) would produce a sequence profit of ≤ 1 unit, increase stake by 1. Otherwise, keep stake the same (or reduce to exactly target +1 unit profit).
+3. **Loss:** Keep stake the same.
+4. When the sequence reaches +1 unit profit, reset to 1 unit and start a new cycle.
+
+**Example (1 unit base, even-money bets):**
+- Bet 1: 1 unit, Lose (−1). Sequence: −1
+- Bet 2: 1 unit, Lose (−1). Sequence: −2
+- Bet 3: 1 unit, Win (+1). Sequence: −1 (stake stays at 1 because 2 would overshoot +1)
+- Bet 4: 1 unit, Win (+1). Sequence: 0
+- Bet 5: 1 unit, Win (+1). Sequence: +1 → Reset. Cycle complete.
+
+## Key Rule
+
+The golden rule: **never bet more than needed to achieve exactly +1 unit profit for the sequence.** If you're at −3 and bet 1 unit, a win at evens brings you to −2 — still not +1, so the stake could increase to 2 for the next bet (2 × evens = +2 profit, −3 + 2 = −1, still below +1).
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `unit` | number | 1 | Base unit size |
+| `target_profit` | number | 1 | Profit target per cycle (typically 1 unit) |
+
+## Risk Assessment
+
+- **Risk Level:** Low
+- **Max Drawdown:** Very slow stake growth — stakes only increase after wins, and only when it won't overshoot the 1-unit target
+- **Recommended Bankroll:** 50+ units
+- **Ruin Risk:** Very low — one of the safest progression systems
+
+## When to Use
+
+- You have extreme patience (cycles can be very long)
+- Capital preservation is paramount
+- You enjoy the intellectual elegance of "never bet more than you need"
+
+## When to Avoid
+
+- You want fast results (the "grind" is real — cycles with many losses can take dozens of bets)
+- Low odds selections (harder to reach +1 with small wins)
+- You find the calculation tedious
+
+## Betfair Exchange Notes
+
+- The +1 target should account for commission: effective target ≈ 1 / (1 − commission)
+- Works for both back and lay
+
+## Related Plans
+
+- [Paroli](./paroli.md) — Aggressive positive progression (opposite philosophy)
+- [D'Alembert](./dalembert.md) — Moderate negative progression
+- [Whitaker](./whitaker.md) — Another conservative, slow-growth plan
+
+---
+
+## Sources
+
+- **Plan mechanics:** Classic casino/betting system (public domain)
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+---
+id: parlay
+name: Parlay
+category: back
+type: positive-progression
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Let It Ride
+  - Accumulator Staking
+  - Paroli (Reverse Martingale)
+---
+
+# Parlay Staking Plan
+
+## Overview
+
+A positive progression where you reinvest winnings into the next bet — "let it ride." After a win, stake the original stake **plus** the profit on the next selection. After a loss, return to base stake. The goal is to compound during winning streaks.
+
+## How It Works
+
+- Start with your base unit
+- **Win:** Stake = previous stake + profit from that win
+- **Loss:** Reset to base unit
+- Optionally set a cap (e.g., stop parlaying after 3 consecutive wins)
+
+**Example (3-win streak at 2.0 odds, £10 base):**
+1. Bet £10 at 2.0 → win £10 profit → bank +£10
+2. Bet £20 at 2.0 → win £20 → bank +£30
+3. Bet £40 at 2.0 → win £40 → bank +£70
+4. Reset to £10
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting stake |
+| `max_steps` | number | 3 | Maximum consecutive parlays before reset |
+| `odds_min` | number | — | Minimum odds to parlay (optional filter) |
+
+## Risk Assessment
+
+- **Risk Level:** Medium (controlled by max_steps)
+- **Max Drawdown:** Base stake per losing bet (no escalation after losses)
+- **Recommended Bankroll:** 20× base stake
+- **Ruin Risk:** Low — you never chase losses
+
+## When to Use
+
+- Your selections tend to cluster in winning streaks
+- You want to compound during hot runs without chasing losses
+- You prefer conservative money management (never increase after losses)
+
+## When to Avoid
+
+- Your winners are isolated (no streaks) — you'll rarely benefit from compounding
+- Low strike rate — you'll mostly reset to base without compounding
+- High odds selections — parlaying high-odds wins compounds risk dramatically
+
+## Betfair Exchange Notes
+
+- Parlaying on exchange is straightforward: manually place the next bet with the compounded amount
+- Commission reduces the effective compounding — each win is taxed, so the parlay amount is slightly less than full reinvestment
+- For lay parlays, you parlay the **profit** (not the liability), making it safer
+
+## Related Plans
+
+- [1-3-2-6](./1326.md) — Structured positive progression with predefined sequence
+- [Rolling Doubles](./rolling-doubles.md) — Parlay variant for doubles
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: paroli
+name: Paroli (Reverse Martingale)
+category: back
+type: positive-progression
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Reverse Martingale
+  - Anti-Martingale
+  - Paroli System
+---
+
+# Paroli (Reverse Martingale)
+
+## Overview
+
+The exact opposite of Martingale: double your stake after **wins**, not losses. After 3 consecutive wins, reset to base. The philosophy: ride winning streaks with the house's money, but never chase losses. One of the oldest positive progression systems, dating back to 16th-century Italy.
+
+## How It Works
+
+1. Start with 1 unit
+2. **Win:** Double the stake (up to 2 more times — max 3 doublings)
+3. **Loss:** Reset to 1 unit
+4. After 3 consecutive wins, reset to 1 unit
+
+**Example:** £10 → Win (+£10) → £20 → Win (+£20) → £40 → Win (+£40) → Reset to £10. Total profit: £70 from an initial £10 risk.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_unit` | number | 1 | Starting stake |
+| `max_steps` | number | 3 | Maximum consecutive doublings |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Only 1 unit per losing bet (never chase losses)
+- **Recommended Bankroll:** 20× base unit
+- **Ruin Risk:** Low — you only ever risk your base unit
+
+## When to Use
+
+- Your winners tend to cluster in streaks
+- You want to compound during hot runs without risking your bankroll
+- You prefer the psychological comfort of "never increase after a loss"
+
+## When to Avoid
+
+- Isolated winners (rarely get to step 2 or 3)
+- Low strike rate (mostly resetting to base)
+- You want aggressive bankroll growth (use proportional staking)
+
+## Paroli vs Parlay vs 1-3-2-6
+
+| | Paroli | Parlay | 1-3-2-6 |
+|---|---|---|---|
+| After win | Double stake | Reinvest stake+profit | Follow fixed sequence |
+| After loss | Reset to base | Reset to base | Reset to base |
+| Max steps | 3 | Configurable | 4 |
+| Risk profile | Medium | Medium | Medium |
+
+## Betfair Exchange Notes
+
+- Works identically for back and lay
+- For lay Paroli, double liability after each winning lay (not recommended — better to double stake)
+- Commission reduces effective profit per step
+
+## Related Plans
+
+- [Martingale](./martingale.md) — Opposite philosophy (double after losses)
+- [Parlay](./parlay.md) — Similar but reinvests stake+profit
+- [1-3-2-6](./1326.md) — Fixed-sequence positive progression
+- [Back Accumulator](./back-accumulator.md) — Accumulates base+profit after wins
+
+---
+
+## Sources
+
+- **Plan mechanics:** Classic betting system dating to 16th-century Italy (public domain)
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+---
+id: percentage-point
+name: Percentage Point Staking Plan
+category: back
+type: proportional
+risk: low
+betfair_compatible: true
+aliases:
+  - Point Staking
+  - Bank Divided by Points
+source: marketfeeder
+---
+
+# Percentage Point Staking Plan
+
+## Overview
+
+A simple proportional staking plan: divide your bank into a fixed number of "points," then bet one point. After each result, recalculate the point value based on your new bank balance. Similar to percentage staking but framed in terms of points.
+
+## How It Works
+
+1. Decide how many points to divide your bank into (e.g., 100)
+2. Each bet = 1 point = Bank ÷ number of points
+3. After each result (win or loss), recalculate: new bet = New Bank ÷ number of points
+4. The point value naturally grows with wins and shrinks with losses
+
+**Example:** £1,000 bank ÷ 100 points = £10 per bet. After a win at 2.0 (+£10), bank = £1,010. Next bet = £1,010 ÷ 100 = £10.10.
+
+## Formula
+
+$$S = \frac{B}{N}$$
+
+Where:
+- $S$ = stake (1 point)
+- $B$ = current bankroll
+- $N$ = number of points (fixed)
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `num_points` | number | 100 | Number of points to divide bank into |
+| `starting_bank` | number | 1000 | Initial bankroll |
+
+## Risk Assessment
+
+- **Risk Level:** Low
+- **Max Drawdown:** Self-correcting — stakes shrink as bank shrinks
+- **Recommended Bankroll:** N points (by definition)
+- **Ruin Risk:** Very low — mathematically identical to percentage staking
+
+## Comparison: Point Staking vs Percentage Staking
+
+| | Point Staking (100 pts) | Percentage Staking (1%) |
+|---|---|---|
+| Stake calculation | Bank ÷ 100 | Bank × 1% |
+| Result | Identical | Identical |
+| Framing | "I have 100 points" | "I bet 1%" |
+| Psychology | Points feel tangible | Percentages feel abstract |
+
+## When to Use
+
+- You prefer thinking in "points" rather than percentages
+- Simple, clean bankroll management
+- Long-term conservative betting
+
+## When to Avoid
+
+- You want more sophisticated proportional staking (use Kelly)
+- Very small banks (1 point may be below minimum bet)
+
+## Betfair Exchange Notes
+
+- Works identically for back and lay
+- For lay betting, define whether 1 point = 1 point of stake or 1 point of liability
+
+## Related Plans
+
+- [Percentage Staking](./percentage-staking.md) — Mathematically identical, different framing
+- [Level Stakes](./level-stakes.md) — Fixed stakes, no recalculating
+- [Secure](./secure.md) — Conservative flat alternative
+
+---
+
+## Sources
+
+- **Plan source:** [MarketFeeder — Percentage Point Staking](https://marketfeeder.co.uk/learn/triggers/back-percentage-point/)
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: percentage-staking
+name: Percentage Staking
+category: back
+type: proportional
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - Proportional Staking
+  - % of Bankroll
+---
+
+# Percentage Staking
+
+## Overview
+
+Stake a fixed percentage of your current bankroll on each bet. Stakes grow as you win and shrink as you lose — providing natural bankroll protection since you can never bet 100% of what remains.
+
+## How It Works
+
+Before each bet, calculate `percentage%` of your current bankroll.
+
+```
+Stake = Bankroll × (percentage / 100)
+```
+
+**Example:** £1,000 bankroll at 2% = £20 stake. After a win at 2.0 odds, bankroll = £1,020. Next stake = £20.40.
+
+## Formula
+
+$$S_i = B_i \times \frac{p}{100}$$
+
+Where:
+- $S_i$ = stake for bet $i$
+- $B_i$ = current bankroll before bet $i$
+- $p$ = percentage to stake (typically 1–5%)
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `percentage` | number | 2 | Percentage of bankroll to stake (1–5 recommended) |
+
+## Risk Assessment
+
+- **Risk Level:** Low
+- **Max Drawdown:** Theoretical maximum is 100% but approached asymptotically (never reaches zero)
+- **Recommended Bankroll:** Any — plan scales automatically
+- **Ruin Risk:** Mathematically impossible to go broke (you only ever bet a fraction of remainder)
+
+## When to Use
+
+- You want automatic compounding of profits
+- You want automatic stake reduction during losing runs
+- Long-term growth with bankroll protection
+- You prefer a "set and forget" percentage
+
+## When to Avoid
+
+- Very small bankrolls (tiny absolute stakes may not meet minimum bet requirements)
+- You need quick recovery from drawdowns (slow and steady)
+
+## Betfair Exchange Notes
+
+- For lay betting, consider whether the percentage should apply to stake or liability (see [Lay % Liability](./lay-percentage-liability.md))
+- Commission reduces effective growth rate — a 2% net stake may effectively be ~1.9% after commission
+
+## Related Plans
+
+- [Level Stakes](./level-stakes.md) — Simpler flat alternative
+- [Kelly Criterion](./kelly-criterion.md) — Edge-based proportional staking
+- [Square Root](./square-root.md) — Slower-scaling proportional variant
+- [Lay Percentage](./lay-percentage.md) — Lay-specific variant
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: pro
+name: Pro Staking Plan
+category: back
+type: recovery
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Professional Staking
+---
+
+# Pro Staking Plan
+
+## Overview
+
+An aggressive recovery-based staking plan designed to recoup losses quickly. After a loss, the stake increases significantly to recover the lost amount plus a target profit. High risk, high potential reward — suitable only for experienced punters with large bankrolls.
+
+## How It Works
+
+- Set a target profit per betting cycle
+- After a **loss:** Increase the next stake to cover all previous losses plus the target profit
+- After a **win:** Reset to the base stake
+- The stake after $n$ consecutive losses grows to recover: $\text{sum of losses} + \text{target}$
+
+## Formula
+
+$$S_{i+1} = \frac{\sum_{j=1}^{i} L_j + T}{o_{i+1} - 1}$$
+
+Where:
+- $S_{i+1}$ = next stake
+- $\sum L_j$ = sum of all losses so far in this cycle
+- $T$ = target profit
+- $o_{i+1}$ = decimal odds of next selection
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target_profit` | number | 10 | Desired profit per completed cycle |
+| `base_stake` | number | 10 | Starting stake for each cycle |
+
+## Risk Assessment
+
+- **Risk Level:** High
+- **Max Drawdown:** Potentially severe — stakes grow with cumulative losses
+- **Recommended Bankroll:** 500+ units
+- **Ruin Risk:** High — a long losing streak escalates stakes dangerously
+
+## When to Use
+
+- You have a very large bankroll
+- Your strike rate is high (>50%)
+- You accept the possibility of large drawdowns
+
+## When to Avoid
+
+- Limited bankroll
+- Low strike-rate systems
+- You're uncomfortable with loss-chasing
+- Betfair lay betting (liability compounds even faster)
+
+## Betfair Exchange Notes
+
+- For back betting, the formula is straightforward
+- **Not recommended for lay betting** — the liability escalation is extreme
+- Commission reduces effective recovery slightly
+
+## Related Plans
+
+- [Recovery](./recovery.md) — Similar aggressive recovery approach
+- [Stop at a Winner](./stop-at-a-winner.md) — Recovery variant that stops after any winner
+- [Secure](./secure.md) — Opposite philosophy (conservative)
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: ratchet-back
+name: Ratchet Staking Plan (Back)
+category: back
+type: positive-progression
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Back Ratchet
+  - Ratchet Back Staking
+---
+
+# Ratchet Staking Plan (Back)
+
+## Overview
+
+The back-betting version of the Ratchet staking plan. Divide your bank into a fixed number of points. Every time your bank reaches a new high, the point value increases — and stakes ratchet up. During drawdowns, stakes stay flat at their last high. Never goes down.
+
+## How It Works
+
+1. Divide bank into N points (e.g., 100 points = 1% each)
+2. Bet 1 point per selection
+3. **Bank hits a new high →** Point value increases → Stakes increase (ratchet up)
+4. **Bank drops →** Stakes stay at the last level (never ratchet down)
+5. Set profit target and stop-loss
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `num_points` | number | 100 | Points to divide bank into |
+| `stop_profit` | number | — | Stop at this total profit |
+| `stop_loss` | number | — | Stop at this total loss |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Stakes don't decrease during losing runs
+- **Recommended Bankroll:** 100× initial point value
+
+## When to Use
+
+- Long-term, conservative growth (back betting)
+- You like the psychology of "stakes only go up"
+
+## When to Avoid
+
+- You want stakes to decrease during drawdowns (use percentage staking)
+
+## Comparison: Ratchet Back vs Ratchet Lay
+
+The mechanism is identical; the difference is whether you bet back or lay. Both use the same points-based ratchet logic.
+
+## Betfair Exchange Notes
+
+- For back betting, the stake IS your liability — simpler than lay ratchet
+- Works naturally with exchange back bets
+
+## Related Plans
+
+- [Ratchet Lay](./ratchet-lay.md) — Lay equivalent
+- [Whitaker](./whitaker.md) — Similar "never decrease" philosophy, different mechanics
+
+---
+
+## Sources
+
+- **Plan mechanics:** Classic betting system (public domain)
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+---
+id: ratchet-lay
+name: Ratchet Staking Plan (Lay)
+category: lay
+type: positive-progression
+risk: medium
+betfair_compatible: true
+aliases:
+  - Lay Ratchet
+  - Ratchet Lay Staking
+source: marketfeeder
+---
+
+# Ratchet Staking Plan (Lay)
+
+## Overview
+
+A lay staking plan that only increases stakes — never decreases. The "ratchet" mechanism: every time your bank balance reaches a new high, the stake ratchets up. During drawdowns, stakes stay flat (they never go down). Designed for conservative, one-directional growth.
+
+## How It Works
+
+1. Divide your bank into a number of "points" (e.g., 100 points)
+2. Each point = Bank ÷ number of points
+3. Bet 1 point per selection
+4. **Bank increases →** Points increase → stakes increase (ratchet up)
+5. **Bank decreases →** Stakes stay at the last high level (never ratchet down)
+6. Reset only at profit target or stop-loss
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `num_points` | number | 100 | Number of points to divide bank into |
+| `liability_mode` | boolean | true | Use liability (true) or stake (false) |
+| `stop_profit` | number | — | Maximum profit then stop |
+| `stop_loss` | number | — | Maximum loss then stop |
+| `max_odds` | number | 10 | Maximum lay odds |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Stakes don't decrease — sustained losses at elevated stakes hurt more
+- **Recommended Bankroll:** 100× point value
+- **Ruin Risk:** Medium — the ratchet never releases, but growth is slow
+
+## When to Use
+
+- Long-term, conservative lay betting
+- You want automatic compounding without manual recalculation
+- You prefer the psychological comfort of "stakes only go up"
+
+## When to Avoid
+
+- You want stakes to decrease during losing runs (use percentage staking)
+- Short-term trading (ratchet takes time to build)
+
+## Betfair Exchange Notes
+
+- Two modes: **fixed liability** (recommended) or **fixed stake**
+- Fixed liability mode: you always know your maximum loss per bet
+- The ratchet applies to whichever mode you choose
+
+## Comparison: Ratchet vs Percentage Staking
+
+| | Ratchet | % Staking |
+|---|---|---|
+| After win | Stake increases | Stake increases |
+| After loss | Stake stays flat | Stake decreases |
+| Recovery | Slow (no reduction) | Automatic |
+| Psychology | Positive (only up) | Neutral |
+
+## Related Plans
+
+- [Whitaker](./whitaker.md) — Similar philosophy (never decrease), different mechanics
+- [Lay Whitaker](./lay-whitaker.md) — Lay version of Whitaker
+- [Lay % Liability](./lay-percentage-liability.md) — Proportional alternative (goes down on losses)
+
+---
+
+## Sources
+
+- **Plan source:** [MarketFeeder — Ratchet Lay Staking](https://marketfeeder.co.uk/learn/triggers/ratchet-lay/)
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: recoup-losing-bet
+name: Loss Recoupment (Single Bet)
+category: lay
+type: recovery
+risk: medium
+betfair_compatible: true
+aliases:
+  - Single Bet Recovery
+  - Individual Bet Recoupment
+source: marketfeeder
+---
+
+# Loss Recoupment for a Losing Bet Only
+
+## Overview
+
+A unique recovery approach: unlike most recovery plans that recoup **cumulative** losses, this plan only recoups the loss from a **single losing bet**. If you lay multiple selections in one market and one loses, only that specific loss is carried forward — other winning bets in the same market are not affected.
+
+## How It Works
+
+1. Lay on multiple selections per market (e.g., 3 selections)
+2. Each selection has its own fixed stake
+3. **If a specific selection loses (wins the race):** Add that single loss to the recovery pool
+4. **If a selection wins (loses the race):** No change — that profit is kept
+5. The recovery pool is divided across the next market's bets
+
+**Example:** Lay 3 selections at £10 each. Two win (you profit), one loses (you pay out £30). Only the £30 loss is carried forward and split across the next 3 bets (+£10 each).
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `num_selections` | number | 3 | Number of selections to lay per market |
+| `base_stake` | number | 10 | Fixed stake per selection |
+| `max_stake` | number | 50 | Maximum stake cap per selection |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Controlled — only single-bet losses accumulate, not cumulative
+- **Recommended Bankroll:** 30× (num_selections × base_stake)
+- **Ruin Risk:** Medium-low — max_stake cap provides protection
+
+## When to Use
+
+- Multi-selection lay strategies (dutching-style laying)
+- You want recovery that doesn't snowball from cumulative losses
+- You have a mix of winning and losing selections per market
+
+## When to Avoid
+
+- Single-selection strategies (standard recovery works fine)
+- Very high lay odds on individual selections (single loss can be large)
+
+## Betfair Exchange Notes
+
+- Particularly suited to exchange lay dutching — lay multiple horses in a race
+- The isolation of losses per selection prevents one bad pick from ruining the whole strategy
+- Commission on winning lays is kept, not absorbed into recovery
+
+## Related Plans
+
+- [Recovery](./recovery.md) — Cumulative loss recovery (more aggressive)
+- [Lay Dutching with loss recovery](./lay-dutching-recovery.md) — Dutching-specific recovery
+
+---
+
+## Sources
+
+- **Plan source:** [MarketFeeder — Loss Recoupment for a Losing Bet](https://marketfeeder.co.uk/learn/triggers/recoup-losing-bet/)
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: recovery-type-2
+name: Recovery Type 2
+category: back
+type: recovery
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Recovery V2
+---
+
+# Recovery Type 2
+
+## Overview
+
+A variant of the Recovery staking plan with modified rules for stake calculation after losses. Provides an alternative recovery pattern — designed to spread recovery across multiple bets rather than aiming for a single recovery win.
+
+## How It Works
+
+Similar to standard Recovery but with different loss-absorption mechanics:
+
+1. After a loss, the next stake recovers a **portion** of the loss (not all)
+2. Recovery is spread across the next few bets
+3. This makes stake escalation slower than standard Recovery
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting stake |
+| `recovery_fraction` | number | 0.5 | Portion of loss to recover per bet (0–1) |
+| `max_recovery_bets` | number | 5 | Maximum bets to spread recovery over |
+
+## Risk Assessment
+
+- **Risk Level:** High (but lower than standard Recovery)
+- **Max Drawdown:** Slower escalation than Recovery V1
+- **Recommended Bankroll:** 300+ units
+- **Ruin Risk:** High — still chases losses, just more gradually
+
+## When to Use
+
+- You want recovery staking but find standard Recovery too aggressive
+- You prefer spreading recovery across multiple bets
+
+## When to Avoid
+
+- Same cautions as standard Recovery — loss-chasing is inherently dangerous
+- You don't have a stop-loss in place
+
+## Betfair Exchange Notes
+
+- For lay betting, apply recovery fraction to liability recovery, not stake
+- Still risky for lay — consider [Lay % Recovery](./lay-percentage-recovery.md)
+
+## Related Plans
+
+- [Recovery](./recovery.md) — Original (more aggressive)
+- [Recovery Type 3](./recovery-type-3.md) — Another variant
+- [Stop at a Winner](./stop-at-a-winner.md) — Reset on any winner
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: recovery-type-3
+name: Recovery Type 3
+category: back
+type: recovery
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Recovery V3
+---
+
+# Recovery Type 3
+
+## Overview
+
+A third variant of the Recovery staking plan with further modified recovery mechanics. Incorporates a divisor-style calculation for even more controlled loss recovery compared to Types 1 and 2.
+
+## How It Works
+
+1. Uses a divisor to spread target recovery across bets
+2. After a loss, lost amount is added to a recovery pool
+3. Recovery pool is divided by a configurable divisor for the next stake
+4. Wins reduce the recovery pool; pool empty = reset to base
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting stake |
+| `divisor` | number | 4 | Controls how aggressively to recover |
+| `max_divisor` | number | 10 | Maximum divisor (caps stake size) |
+
+## Risk Assessment
+
+- **Risk Level:** High (most controlled of the three Recovery types)
+- **Max Drawdown:** Limited by divisor — slower escalation
+- **Recommended Bankroll:** 200+ units
+- **Ruin Risk:** High — still chases losses
+
+## When to Use
+
+- You want the most controlled version of recovery staking
+- You accept loss-chasing with built-in speed limits
+
+## When to Avoid
+
+- You haven't thoroughly tested it with your system's historical data
+- You're risk-averse (use a non-recovery plan)
+
+## Comparison: Recovery Types
+
+| | Type 1 | Type 2 | Type 3 |
+|---|---|---|---|
+| Recovery speed | Fastest | Medium | Slowest |
+| Stake escalation | Highest | Medium | Lowest |
+| Risk | Highest | High | High (controlled) |
+| Mechanism | Full recovery next bet | Fractional recovery | Divisor-based recovery |
+
+## Betfair Exchange Notes
+
+- Type 3's divisor approach is the most suitable for lay betting among Recovery variants
+- Still exercise caution with lay liability
+
+## Related Plans
+
+- [Recovery](./recovery.md) — Type 1 (fastest)
+- [Recovery Type 2](./recovery-type-2.md) — Type 2 (medium)
+- [6 Point Divisor](./6-point-divisor.md) — Related divisor concept
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: recovery
+name: Recovery Staking Plan
+category: back
+type: recovery
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Loss Recovery
+---
+
+# Recovery Staking Plan
+
+## Overview
+
+A straightforward recovery plan: after any loss, increase the next stake to recover the lost amount. The goal is to return to the starting position after every loss, plus earn a small target profit.
+
+## How It Works
+
+1. Start with a base stake
+2. **Win:** Reset to base stake (cycle complete)
+3. **Loss:** Next stake = (previous stake + loss amount) / (odds − 1), aiming to recover everything in one bet
+
+**Example:** £10 base at 2.0 odds. Lose £10. Next stake = £10 (to win £10 back). Lose again (£20 total loss). Next stake = £20. Win → recover all £30 lost + base profit.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting stake |
+| `target_profit` | number | 0 | Additional profit per cycle (optional) |
+
+## Risk Assessment
+
+- **Risk Level:** High
+- **Max Drawdown:** Exponential growth during losing streaks
+- **Recommended Bankroll:** 500+ units
+- **Ruin Risk:** High — pure loss-chasing without caps
+
+## When to Use
+
+- Very high strike rate (>60%)
+- Large bankroll
+- Short-term use with strict stop-loss
+
+## ⚠️ Critical Warning
+
+Unchecked recovery staking is one of the most dangerous approaches. Without a stop-loss or maximum stake cap, a long losing streak will deplete any bankroll. **Always set a maximum number of recovery steps.**
+
+## Betfair Exchange Notes
+
+- For lay betting, recovery staking is extremely dangerous — liability grows with both the recovery amount and the odds
+- See [Lay % Recovery](./lay-percentage-recovery.md) for a slightly safer lay variant
+
+## Related Plans
+
+- [Pro](./pro.md) — Similar recovery with fixed target profit
+- [Stop at a Winner](./stop-at-a-winner.md) — Recovery that stops after any winner
+- [Recovery Type 2](./recovery-type-2.md) — Variant
+- [Recovery Type 3](./recovery-type-3.md) — Variant
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: retirement
+name: Retirement Staking Plan
+category: back
+type: target-based
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Retirement Plan
+---
+
+# Retirement Staking Plan
+
+## Overview
+
+A target-based staking plan where you aim to achieve a set profit target within a fixed number of bets. Stakes are calculated to reach the target while managing risk through a divisor that adjusts based on results.
+
+## How It Works
+
+1. Set a **profit target** and a **divisor** (e.g., target = £100, divisor = 10)
+2. Stake = Target / Divisor (£100/10 = £10 for the first bet)
+3. **Win:** Reduce target by profit won, reduce divisor by 1
+4. **Loss:** Add lost stake to target, divisor stays the same
+
+The plan "retires" when the target reaches zero (profit achieved).
+
+## Formula
+
+$$S = \frac{T}{D}$$
+
+Where:
+- $S$ = stake
+- $T$ = remaining profit target
+- $D$ = current divisor
+
+After a win: $T_{new} = T - \text{profit}$, $D_{new} = D - 1$
+After a loss: $T_{new} = T + \text{stake lost}$, $D_{new} = D$
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `target` | number | 100 | Profit target to achieve |
+| `divisor` | number | 10 | Initial divisor (controls stake size) |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Moderate — losses increase the target, inflating future stakes
+- **Recommended Bankroll:** 5–10× target
+- **Ruin Risk:** Medium — prolonged losing can cause target inflation
+
+## When to Use
+
+- You have a specific profit goal in mind
+- You want structured, goal-oriented staking
+- Your strike rate is reasonable (40%+)
+
+## When to Avoid
+
+- Very long odds — wins are too infrequent to reduce the target
+- You have no specific profit target
+
+## Betfair Exchange Notes
+
+- Adjust target for commission: after a win, target reduces by profit × (1 − commission)
+- Works for both back and lay
+
+## Related Plans
+
+- [6 Point Divisor](./6-point-divisor.md) — Similar divisor-based plan
+- [Bookies Bank](./bookies-bank.md) — Target-based plan with different divisor rules
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: reverse-labouchere
+name: Reverse Labouchere
+category: back
+type: positive-progression
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Reverse Cancellation
+  - Anti-Labouchere
+---
+
+# Reverse Labouchere
+
+## Overview
+
+The positive-progression mirror of the Labouchere system: instead of crossing off numbers after wins, you **add** the stake to the sequence after wins. Cross off after losses. This means your stakes grow during hot streaks and shrink during cold ones — the opposite of standard Labouchere.
+
+## How It Works
+
+1. Write a starting sequence (e.g., 1-2-3)
+2. Each bet: stake = first + last number
+3. **Win:** Add the stake amount to the **end** of the sequence
+4. **Loss:** Cross off the first and last numbers
+5. When the sequence is empty (all numbers crossed off from losses), accept the loss and restart
+
+**Example (1-2-3, even-money):**
+- Bet 1: stake = 1+3 = 4. Win → sequence becomes 1-2-3-4
+- Bet 2: stake = 1+4 = 5. Win → 1-2-3-4-5
+- Bet 3: stake = 1+5 = 6. Lose → cross 1 and 5 → 2-3-4
+- Bet 4: stake = 2+4 = 6. Win → 2-3-4-6
+
+The sequence grows on wins (compounding hot streaks) and shrinks on losses (limiting damage).
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `sequence` | number[] | [1,2,3] | Starting number sequence |
+| `cap` | number | — | Optional maximum sequence length |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** The initial sequence sum (e.g., 1+2+3 = 6 units). Losses shrink the sequence.
+- **Recommended Bankroll:** 10× initial sequence sum
+- **Ruin Risk:** Low — you only lose the initial sequence, and it shrinks during losses
+
+## When to Use
+
+- Your winners cluster in streaks
+- You want a positive progression with more structure than Paroli
+- You enjoy the sequence-based mechanics
+
+## When to Avoid
+
+- Isolated winners (sequence never grows meaningfully)
+- You find sequence tracking tedious
+
+## Comparison: Labouchere vs Reverse
+
+| | Labouchere | Reverse Labouchere |
+|---|---|---|
+| After win | Cross off numbers | **Add** to sequence |
+| After loss | Add to sequence | **Cross off** numbers |
+| Stakes during hot streak | Shrink | **Grow** |
+| Stakes during cold streak | Grow | **Shrink** |
+| Risk | High | Medium |
+
+## Betfair Exchange Notes
+
+- For lay Reverse Labouchere, track sequence based on liability rather than stake
+- Commission reduces the effective addition to the sequence after wins
+
+## Related Plans
+
+- [Labouchere](./labouchere.md) — Standard (negative progression) version
+- [Lay Labouchere](./lay-labouchere.md) — Lay-specific standard Labouchere
+- [Paroli](./paroli.md) — Simpler positive progression (just double, no sequence)
+
+---
+
+## Sources
+
+- **Plan mechanics:** Classic betting system (public domain)
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+---
+id: rolling-doubles
+name: Rolling Doubles
+category: back
+type: accumulator
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - Rolling Accumulators
+---
+
+# Rolling Doubles
+
+## Overview
+
+A staking plan based on rolling double bets. The stake and any profit from a winning double rolls onto the next double. Capitalizes on consecutive pairs of winners with compounding, but resets after any losing leg.
+
+## How It Works
+
+1. Place a **double** (two selections, both must win)
+2. **Both win:** Stake + profit rolls onto the next double
+3. **Any loss:** Reset to base stake
+
+The plan exploits clusters of consecutive winning doubles. A few successful rolls can produce significant returns.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting stake for each rolling sequence |
+| `max_rolls` | number | 5 | Maximum consecutive rolls before reset |
+
+## Risk Assessment
+
+- **Risk Level:** High
+- **Max Drawdown:** Base stake × number of failed doubles
+- **Recommended Bankroll:** 30+ base stakes
+- **Ruin Risk:** Medium — stakes don't escalate after losses, but doubles are low-probability
+
+## When to Use
+
+- Your selections tend to come in pairs/clusters
+- You enjoy accumulator-style betting
+- You can accept many small losses for occasional large wins
+
+## When to Avoid
+
+- Low strike-rate selections — doubles have squared probability (e.g., 40% each leg = 16% double)
+- Bankroll preservation is the priority
+
+## Betfair Exchange Notes
+
+- Rolling doubles on exchange require placing each double sequentially (not as a single bet)
+- If the first leg wins, you must manually place the second leg
+- Commission applies to each winning leg, reducing compounding effect
+
+## Related Plans
+
+- [Parlay](./parlay.md) — Single-bet rolling (let it ride)
+- [1-3-2-6](./1326.md) — Structured progressive staking
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: secure
+name: Secure Staking Plan
+category: back
+type: flat
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - Secure Staking
+---
+
+# Secure Staking Plan
+
+## Overview
+
+A very conservative staking plan where the stake is a fixed, very small percentage of the starting bankroll — and **never changes**. Unlike percentage staking, it does not compound growth. Unlike level stakes, it's explicitly tied to bankroll size at the start.
+
+## How It Works
+
+Set a very conservative initial percentage (typically 1% or less). The resulting stake becomes your permanent fixed stake.
+
+$$Stake = Initial\ Bankroll \times Percentage$$
+
+**Example:** £1,000 bankroll at 1% = £10 stake. That £10 is used for every bet, forever, regardless of bankroll changes.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `initial_bankroll` | number | 1000 | Starting bankroll |
+| `percentage` | number | 1 | Conservative percentage (1% or less) |
+
+## Risk Assessment
+
+- **Risk Level:** Low
+- **Max Drawdown:** Very controlled — small fixed stakes
+- **Recommended Bankroll:** 100× stake (built into the formula at 1%)
+- **Ruin Risk:** Extremely low
+
+## When to Use
+
+- You want the absolute safest staking approach
+- Your bankroll is large relative to your goals
+- You're risk-averse or new to betting
+- Capital preservation is more important than growth
+
+## When to Avoid
+
+- You want meaningful bankroll growth
+- Your bankroll is small (1% may be below minimum bet)
+
+## Betfair Exchange Notes
+
+- The simplicity and safety make it ideal for learning exchange betting
+- Fixed stakes mean lay liability is predictable at all odds
+
+## Related Plans
+
+- [Level Stakes](./level-stakes.md) — Similar but not explicitly tied to bankroll %
+- [Percentage Staking](./percentage-staking.md) — Same concept but recalculates (compounds)
+- [Whitaker](./whitaker.md) — Another conservative approach with small increments
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: square-root
+name: Square Root Staking
+category: back
+type: proportional
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Root Staking
+---
+
+# Square Root Staking Plan
+
+## Overview
+
+A proportional staking system that scales stake with the **square root** of bankroll growth — slower than percentage staking, faster than level stakes. Provides a middle ground between flat and proportional approaches.
+
+## How It Works
+
+Stake is proportional to √(current bankroll / initial bankroll). When bankroll doubles, stake increases by √2 ≈ 1.41× (not 2× as with percentage staking).
+
+## Formula
+
+$$S_i = S_0 \times \sqrt{\frac{B_i}{B_0}}$$
+
+Where:
+- $S_i$ = current stake
+- $S_0$ = initial stake
+- $B_i$ = current bankroll
+- $B_0$ = initial bankroll
+
+**Example:** Start with £10 stakes on £1,000 bankroll. When bankroll = £4,000 (4×), stake = £10 × √4 = £20.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `initial_stake` | number | 10 | Starting stake amount |
+| `initial_bankroll` | number | 1000 | Starting bankroll |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Slower recovery than percentage staking, faster than level
+- **Recommended Bankroll:** 50× initial stake
+- **Ruin Risk:** Low — growth is dampened compared to percentage staking
+
+## When to Use
+
+- You want some compounding but find percentage staking too aggressive
+- Long bankroll-building phase expected
+- Conservative growth with partial compounding
+
+## When to Avoid
+
+- You have a strong edge and want maximum compounding (use Kelly)
+- Simplicity is paramount (use level stakes)
+
+## Comparison
+
+| Staking Plan | Double Bankroll → Stake Multiplier |
+|--------------|-------------------------------------|
+| Level Stakes | 1.0× (no change) |
+| Square Root | 1.41× |
+| Percentage (2%) | 2.0× |
+| Full Kelly | Variable (edge-dependent) |
+
+## Betfair Exchange Notes
+
+- Works identically for back and lay — use the same formula
+- Square root scaling is gentle enough that commission impact is negligible for stake sizing purposes
+
+## Related Plans
+
+- [Percentage Staking](./percentage-staking.md) — Linear proportional staking
+- [Kelly Criterion](./kelly-criterion.md) — Optimal edge-based proportional staking
+- [Level Stakes](./level-stakes.md) — Zero-growth flat staking
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: stepped-time-staking
+name: Stepped Time-Based Staking
+category: back
+type: progression
+risk: medium
+betfair_compatible: true
+aliases:
+  - Time-Based Escalation
+  - Cycle Count Staking
+source: community
+---
+
+# Stepped Time-Based Staking
+
+## Overview
+
+A unique staking plan where escalation is based on **time/number of bets** rather than wins or losses. Bet a fixed amount for N races, then increase to the next level for the next N races — always resetting to the base level on any win. Combines flat staking's safety with a gentle incentive to eventually find a winner.
+
+## How It Works
+
+1. Start at **Level 1**: bet 1 unit for up to N races
+2. **Win at any point:** Reset to Level 1 (1 unit)
+3. **N consecutive losses at Level 1:** Move to Level 2 (2 units) for the next N races
+4. **N consecutive losses at Level 2:** Move to Level 3 (3 units)
+5. Continue escalating by 1 unit every N losses
+6. **Any win at any level:** Immediately reset to Level 1
+
+**Example (N=5):** £1 × 5 races (all lose) → £2 × 5 races (all lose) → £3 × 5 races (win on 3rd) → Reset to £1
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_unit` | number | 1 | Starting stake per bet |
+| `bets_per_level` | number | 5 | Number of bets at each level before escalating |
+| `increment` | number | 1 | Units to add per level |
+| `max_level` | number | — | Optional maximum level cap |
+
+## Risk Assessment
+
+- **Risk Level:** Medium
+- **Max Drawdown:** Predictable — each level lasts exactly N bets at a known stake
+- **Recommended Bankroll:** (bets_per_level × max_level × (max_level+1) / 2) units
+- **Ruin Risk:** Low-medium — escalation is slow and capped if max_level is set
+
+## When to Use
+
+- You want a gradual, predictable escalation pace
+- Your strike rate is low but consistent (you WILL hit winners, just not frequently)
+- You prefer the psychological comfort of "I have 5 chances at this level"
+
+## When to Avoid
+
+- Very high strike rates (you'll rarely leave Level 1 — might as well use flat staking)
+- You want aggressive recovery (this is deliberately slow)
+
+## Comparison: Stepped vs Martingale
+
+| | Stepped Time-Based | Martingale |
+|---|---|---|
+| After N losses | Stake = N+1 | Stake = 2^N |
+| 10 losses in | Stake = 3 (if N=5) | Stake = 1,024 |
+| Reset trigger | Any win | Any win |
+| Philosophy | Patience | Aggression |
+
+## Betfair Exchange Notes
+
+- Works identically for back and lay
+- For lay betting, apply the level to liability rather than stake
+
+## Related Plans
+
+- [Level Stakes](./level-stakes.md) — Flat staking (no escalation)
+- [Martingale](./martingale.md) — Aggressive doubling (opposite philosophy)
+- [Whitaker](./whitaker.md) — Small increments after wins (different direction)
+
+---
+
+## Sources
+
+- **Plan source:** [WellDone Community Forum — "Back recovery strategy"](https://community.welldonesoft.com/index.php?topic=16579.0) — user-contributed concept by Gordon
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: stop-at-a-winner
+name: Stop at a Winner (SAW)
+category: back
+type: recovery
+risk: high
+betfair_compatible: true
+aliases:
+source: tsm
+  - SAW
+  - Stop At Winner
+---
+
+# Stop at a Winner (SAW)
+
+## Overview
+
+A recovery staking plan that escalates stakes after losses but resets completely after **any** winner. The idea: you only need one win to wipe out all accumulated losses and return to profit. Riskier than standard recovery because it aims to recover everything in a single win.
+
+## How It Works
+
+1. Start with a base stake
+2. **Loss:** Calculate next stake to recover all losses + target profit at the upcoming odds
+3. **Win:** Reset entirely to base stake
+4. Continue until a winner occurs, then restart
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting stake for each cycle |
+| `target_profit` | number | 0 | Additional profit target per cycle |
+
+## Risk Assessment
+
+- **Risk Level:** High
+- **Max Drawdown:** Escalates with each consecutive loss
+- **Recommended Bankroll:** 500+ units
+- **Ruin Risk:** High — one long losing streak can be catastrophic
+
+## When to Use
+
+- Very high strike rate (>60%)
+- Short losing streaks are the norm for your system
+- You have a very large bankroll
+
+## When to Avoid
+
+- Low strike-rate systems
+- Long-odds betting (fewer winners = longer streaks)
+- Lay betting (liability compounds dangerously)
+- You don't have a hard stop-loss
+
+## Comparison: SAW vs Standard Recovery
+
+| | SAW | Standard Recovery |
+|---|---|---|
+| After a win | Full reset | Full reset |
+| Stake growth | Must recover all losses in one bet | Can spread recovery |
+| Risk | Higher (fewer bets to recover) | Slightly lower |
+
+## Betfair Exchange Notes
+
+- For lay SAW, the liability after a few losses becomes enormous — not recommended
+- Back-only is the safer application
+
+## Related Plans
+
+- [Recovery](./recovery.md) — Similar but may spread recovery across bets
+- [Pro](./pro.md) — Recovery with fixed target per cycle
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: up-x-down-y
+name: Up X Down Y
+category: back
+type: progression
+risk: medium
+betfair_compatible: true
+aliases:
+source: tsm
+  - Up X / Down Y
+  - Asymmetric Progression
+---
+
+# Up X Down Y Staking Plan
+
+## Overview
+
+An asymmetric progression plan where stakes increase by X units after a loss but decrease by Y units after a win — with X and Y independently configurable. Typically X > Y, making the plan a mild negative progression (faster up, slower down).
+
+## How It Works
+
+- **After a loss:** Increase stake by X units
+- **After a win:** Decrease stake by Y units (never below base)
+- Choose X and Y to control recovery speed vs risk
+
+**Example (X=2, Y=1):** Start at 10. Lose → 12. Lose → 14. Win → 13. Win → 12. Lose → 14...
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting and minimum stake |
+| `X` | number | 2 | Units to increase after a loss |
+| `Y` | number | 1 | Units to decrease after a win |
+
+## Risk Assessment
+
+- **Risk Level:** Medium (X > Y), Low (X = Y), Low (Y > X — positive progression)
+- **Max Drawdown:** Linear growth at rate X per loss
+- **Recommended Bankroll:** 100+ units
+- **Ruin Risk:** Medium if X > Y
+
+## When to Use
+
+- You want fine-grained control over progression speed
+- You prefer moderate negative progression (X slightly larger than Y)
+- Or you want positive progression (Y > X)
+
+## When to Avoid
+
+- Large X values — linear growth becomes aggressive over many losses
+- You want simple, fixed rules
+
+## Betfair Exchange Notes
+
+- For lay betting, apply X and Y to liability, not stake (safer)
+- See [Lay % Up Down](./lay-percentage-up-down.md) for the lay variant
+
+## Related Plans
+
+- [D'Alembert](./dalembert.md) — Special case where X = Y = 1
+- [Lay % Up Down](./lay-percentage-up-down.md) — Lay variant
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: whitaker
+name: Whitaker Staking Plan
+category: back
+type: hybrid
+risk: low
+betfair_compatible: true
+aliases:
+source: tsm
+  - Whittaker
+  - Whitaker System
+---
+
+# Whitaker Staking Plan
+
+## Overview
+
+A conservative staking plan combining flat staking with small incremental increases. Increase stake by a small amount after each winner, never decrease. Designed for steady, low-risk growth without the volatility of progression systems.
+
+## How It Works
+
+- Start with a base stake
+- After each **winning** bet, increase the stake by a small fixed amount
+- **Never decrease** the stake — even after losses
+- Growth is slow but one-directional
+
+**Example:** £10 base, £0.50 increment. After first win, stake = £10.50. After second win, stake = £11.00. Losses do not reduce the stake.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_stake` | number | 10 | Starting stake |
+| `increment` | number | 0.50 | Increase amount after each win |
+| `increment_type` | string | "fixed" | "fixed" (absolute) or "percentage" |
+
+## Risk Assessment
+
+- **Risk Level:** Low
+- **Max Drawdown:** Similar to level stakes — stakes never escalate due to losses
+- **Recommended Bankroll:** 30–50× base stake
+- **Ruin Risk:** Very low — no negative progression
+
+## When to Use
+
+- Very long-term betting with consistent small edge
+- You want gradual, sustainable growth
+- Psychological comfort: stakes only ever go up (with wins) or stay flat
+
+## When to Avoid
+
+- Short-term or aggressive growth goals
+- Your win rate is very low (increments are too infrequent)
+
+## Betfair Exchange Notes
+
+- Works well for both back and lay
+- For lay betting, ensure the increment applies to a manageable metric (stake or liability, not both)
+
+## Related Plans
+
+- [Lay Whitaker](./lay-whitaker.md) — Lay-specific variant
+- [Level Stakes](./level-stakes.md) — Same but without increments
+- [Secure](./secure.md) — Another conservative staking plan
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
+---
+id: xyz
+name: XYZ Staking Plan
+category: back
+type: custom
+risk: variable
+betfair_compatible: true
+aliases:
+source: tsm
+  - XYZ Custom Staking
+---
+
+# XYZ Staking Plan
+
+## Overview
+
+A highly customizable staking plan with "infinite settings" — allowing the user to define custom stake progression rules along three axes (X, Y, Z). The flexibility makes it adaptable to almost any betting style but requires careful configuration.
+
+## How It Works
+
+The plan uses three configurable parameters:
+- **X:** Base stake or percentage
+- **Y:** Progression rule (increase after loss/win, amount, cap)
+- **Z:** Reset condition (after win, after target reached, after N bets)
+
+Because of infinite configurability, XYZ can mimic many other staking plans or create entirely custom approaches.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `X` | number/string | — | Base stake (fixed or % of bankroll) |
+| `Y_rule` | string | — | Progression direction and amount |
+| `Y_step` | number | — | Size of each progression step |
+| `Z_condition` | string | — | Reset trigger |
+
+## Risk Assessment
+
+- **Risk Level:** Variable (depends entirely on configuration)
+- **Max Drawdown:** Configurable through caps and reset rules
+- **Recommended Bankroll:** Depends on configuration
+
+## When to Use
+
+- You have a specific, custom staking strategy in mind
+- You want to experiment with different progression rules
+- No existing plan fits your exact needs
+
+## When to Avoid
+
+- You're looking for a simple, predefined plan
+- You don't fully understand the implications of your configuration (easy to create a dangerous setup)
+
+## Betfair Exchange Notes
+
+- XYZ can be configured for back or lay betting
+- For lay, ensure Y rules operate on liability, not stake
+
+## Related Plans
+
+- [Lay XYZ](./lay-xyz.md) — Lay-specific variant
+
+---
+
+## Sources
+
+- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — staking plan software with 50+ plans
+- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
