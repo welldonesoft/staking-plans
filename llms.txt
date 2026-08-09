@@ -1,0 +1,89 @@
+# Staking Plans
+> Comprehensive catalog of 71 betting staking plans — back, lay, and each-way.
+> GitHub Pages: https://welldonesoft.github.io/staking-plans/
+
+## Plans
+
+### Back Plans
+- [1 Point Back](docs/plans/1-point-back.md): flat staking plan. Risk: low.
+- [1-3-2-6 System](docs/plans/1326.md): positive-progression staking plan. Risk: medium.
+- [2-6 Staking Plan](docs/plans/2-6-staking.md): progression staking plan. Risk: medium.
+- [6 Point Divisor Plan](docs/plans/6-point-divisor.md): target-based staking plan. Risk: medium.
+- [Back Accumulator Staking Plan](docs/plans/back-accumulator.md): positive-progression staking plan. Risk: medium.
+- [Back Multi-Link Doubles](docs/plans/back-multi-link-doubles.md): cycle-based staking plan. Risk: medium.
+- [Bookies Bank V2](docs/plans/bookies-bank-v2.md): target-based staking plan. Risk: medium.
+- [Bookies Bank V3](docs/plans/bookies-bank-v3.md): target-based staking plan. Risk: medium.
+- [Bookies Bank](docs/plans/bookies-bank.md): target-based staking plan. Risk: medium.
+- [Certain Profit](docs/plans/certain-profit.md): target-based staking plan. Risk: medium.
+- [Contra D'Alembert](docs/plans/contra-dalembert.md): positive-progression staking plan. Risk: low.
+- [Coup Master](docs/plans/coup-master.md): target-based staking plan. Risk: medium.
+- [D'Alembert](docs/plans/dalembert.md): negative-progression staking plan. Risk: medium.
+- [Due Column Staking Plan](docs/plans/due-column.md): target-based staking plan. Risk: medium.
+- [Fibonacci](docs/plans/fibonacci.md): negative-progression staking plan. Risk: high.
+- [Fixed Stake](docs/plans/fixed-stake.md): flat staking plan. Risk: low.
+- [Hollandish Staking Plan](docs/plans/hollandish.md): negative-progression staking plan. Risk: medium.
+- [i-TSM](docs/plans/i-tsm.md): custom staking plan. Risk: variable.
+- [Kelly Criterion](docs/plans/kelly-criterion.md): proportional staking plan. Risk: high.
+- [Labouchere](docs/plans/labouchere.md): negative-progression staking plan. Risk: high.
+- [Level Stakes](docs/plans/level-stakes.md): flat staking plan. Risk: low.
+- [L.P.28 Staking Plan](docs/plans/lp28.md): target-based staking plan. Risk: medium.
+- [Martingale](docs/plans/martingale.md): negative-progression staking plan. Risk: very-high.
+- [Oscar's Grind](docs/plans/oscars-grind.md): positive-progression staking plan. Risk: low.
+- [Parlay](docs/plans/parlay.md): positive-progression staking plan. Risk: medium.
+- [Paroli (Reverse Martingale)](docs/plans/paroli.md): positive-progression staking plan. Risk: medium.
+- [Percentage Point Staking Plan](docs/plans/percentage-point.md): proportional staking plan. Risk: low.
+- [Percentage Staking](docs/plans/percentage-staking.md): proportional staking plan. Risk: low.
+- [Pro Staking Plan](docs/plans/pro.md): recovery staking plan. Risk: high.
+- [Ratchet Staking Plan (Back)](docs/plans/ratchet-back.md): positive-progression staking plan. Risk: medium.
+- [Recovery Type 2](docs/plans/recovery-type-2.md): recovery staking plan. Risk: high.
+- [Recovery Type 3](docs/plans/recovery-type-3.md): recovery staking plan. Risk: high.
+- [Recovery Staking Plan](docs/plans/recovery.md): recovery staking plan. Risk: high.
+- [Retirement Staking Plan](docs/plans/retirement.md): target-based staking plan. Risk: medium.
+- [Reverse Labouchere](docs/plans/reverse-labouchere.md): positive-progression staking plan. Risk: medium.
+- [Rolling Doubles](docs/plans/rolling-doubles.md): accumulator staking plan. Risk: high.
+- [Secure Staking Plan](docs/plans/secure.md): flat staking plan. Risk: low.
+- [Square Root Staking](docs/plans/square-root.md): proportional staking plan. Risk: medium.
+- [Stepped Time-Based Staking](docs/plans/stepped-time-staking.md): progression staking plan. Risk: medium.
+- [Stop at a Winner (SAW)](docs/plans/stop-at-a-winner.md): recovery staking plan. Risk: high.
+- [Up X Down Y](docs/plans/up-x-down-y.md): progression staking plan. Risk: medium.
+- [Whitaker Staking Plan](docs/plans/whitaker.md): hybrid staking plan. Risk: low.
+- [XYZ Staking Plan](docs/plans/xyz.md): custom staking plan. Risk: variable.
+
+### Lay Plans
+- [Diluted Loss Recovery](docs/plans/diluted-loss-recovery.md): recovery staking plan. Risk: medium.
+- [Divide-by-N Recovery](docs/plans/divide-by-n-recovery.md): recovery staking plan. Risk: high.
+- [Incremental Loss Recovery](docs/plans/incremental-loss-recovery.md): recovery staking plan. Risk: medium.
+- [Lay 1-4 Staking Plan](docs/plans/lay-1-4.md): progression staking plan. Risk: medium.
+- [Lay 1 Point](docs/plans/lay-1-point.md): flat staking plan. Risk: low.
+- [Lay Accumulator Staking Plan](docs/plans/lay-accumulator.md): positive-progression staking plan. Risk: medium.
+- [Lay D'Alembert](docs/plans/lay-dalembert.md): negative-progression staking plan. Risk: medium.
+- [Lay Goff Staking Plan](docs/plans/lay-goff.md): target-based staking plan. Risk: medium.
+- [Lay HiPro86 SP4](docs/plans/lay-hipro86-sp4.md): recovery staking plan. Risk: high.
+- [Lay Kelly Criterion](docs/plans/lay-kelly.md): proportional staking plan. Risk: high.
+- [Lay Labouchere](docs/plans/lay-labouchere.md): negative-progression staking plan. Risk: high.
+- [Lay Ladder](docs/plans/lay-ladder.md): progression staking plan. Risk: medium.
+- [Lay Level Stakes](docs/plans/lay-level.md): flat staking plan. Risk: low.
+- [Lay Fixed Liability](docs/plans/lay-liability.md): flat staking plan. Risk: low.
+- [Lay Maria Liability](docs/plans/lay-maria-liability.md): recovery staking plan. Risk: high.
+- [Lay Maria](docs/plans/lay-maria.md): recovery staking plan. Risk: high.
+- [Lay Mixed Staking Plan](docs/plans/lay-mixed.md): hybrid staking plan. Risk: medium.
+- [Lay Multi-Link Doubles](docs/plans/lay-multi-link-doubles.md): cycle-based staking plan. Risk: medium.
+- [Lay % Liability](docs/plans/lay-percentage-liability.md): proportional staking plan. Risk: medium.
+- [Lay % Recovery](docs/plans/lay-percentage-recovery.md): recovery staking plan. Risk: high.
+- [Lay % Up Down](docs/plans/lay-percentage-up-down.md): progression staking plan. Risk: medium.
+- [Lay Percentage Staking](docs/plans/lay-percentage.md): proportional staking plan. Risk: medium.
+- [Lay Whitaker](docs/plans/lay-whitaker.md): hybrid staking plan. Risk: low.
+- [Lay XYZ](docs/plans/lay-xyz.md): custom staking plan. Risk: variable.
+- [Ratchet Staking Plan (Lay)](docs/plans/ratchet-lay.md): positive-progression staking plan. Risk: medium.
+- [Loss Recoupment (Single Bet)](docs/plans/recoup-losing-bet.md): recovery staking plan. Risk: medium.
+
+### Each-Way Plans
+- [Each-Way Combined Staking](docs/plans/each-way-combined.md): proportional staking plan. Risk: medium.
+- [Each-Way Level Stakes](docs/plans/each-way-level.md): flat staking plan. Risk: low.
+
+## Machine-Readable Index
+- [JSON Index](docs/plans/index.json): All plan metadata in JSON format
+- [Full Text](llms-full.txt): All 71 plans concatenated for single-read ingestion
+
+## Source
+58 plans from The Staking Machine, 10 from MarketFeeder, 3 from community.
