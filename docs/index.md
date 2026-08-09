@@ -118,10 +118,3 @@ When using staking plans on Betfair Exchange:
 
 Staking plans do not create profit from losing selections. No money management system can turn a negative expected value into a positive one. Always gamble responsibly and never stake more than you can afford to lose.
 
----
-
-## Sources
-
-- **Plan catalog reference:** [The Staking Machine](https://thestakingmachine.com/staking-plans/) — comprehensive staking plan software with 50+ plans
-- **Plan mechanics:** Mathematical formulas and plan concepts are in the public domain
-- **Content:** Original descriptions written for this repository
