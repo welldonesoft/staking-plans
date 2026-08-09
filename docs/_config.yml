@@ -1,0 +1,23 @@
+# GitHub Pages configuration
+theme: jekyll-theme-merlot
+title: Staking Plans
+description: Comprehensive catalog of 71 betting staking plans — back, lay, and each-way. Built for AI agents and humans.
+
+# Apply a default layout to all pages
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+# Ensure all .md files are processed
+include:
+  - "*.md"
+  - "plans/*.md"
+
+# Markdown settings
+markdown: kramdown
+
+# Exclude these from the site build
+exclude:
+  - "*.json"
